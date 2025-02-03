@@ -1,4 +1,4 @@
-Welcome to the MowTalk Project we look forward to working with you. 
+Welcome to the MowHelp Project we look forward to working with you. 
 
 ## Getting Started
 
