@@ -1,0 +1,100 @@
+.qubit-opentag .clear {
+  clear: both;
+}
+.qubit-opentag h2.logo {
+  background: url('../images/opentag-logo.png') no-repeat left center;
+  display: block;
+  height: 50px;
+  width: 280px;
+}
+.qubit-opentag .current-tag {
+  background-color: #F7F7F9;
+  border: 1px solid #CCC;
+  color: #21759B;
+  padding: 0px 10px;
+  border-radius: 5px;
+}
+.qubit-opentag .form-table {
+  margin-top: 30px;
+  border-top: 1px dotted #CCC;
+}
+.qubit-opentag .tips {
+  background: url('../images/matrix.png') no-repeat center bottom white;
+  float: left;
+  padding: 5px;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+.qubit-opentag .helper {
+  color: #666;
+  font-size: 11px;
+}
+.qubit-opentag .option-gap {
+  display: inline-block;
+  width: 10px;
+}
+.qubit-opentag .tips ul {
+  margin-left: 20px;
+  margin-right: 10px;
+  margin-bottom: 120px;
+}
+.qubit-opentag .signup {
+  background-image: linear-gradient(bottom, #67965A 45%, #577C4D 58%);
+  background-image: linear-gradient(bottom, #67965A 18%, #577C4D 69%);
+  background-image: -o-linear-gradient(bottom, #67965A 18%, #577C4D 69%);
+  background-image: -moz-linear-gradient(bottom, #67965A 18%, #577C4D 69%);
+  background-image: -webkit-linear-gradient(bottom, #67965A 18%, #577C4D 69%);
+  background-image: -ms-linear-gradient(bottom, #67965A 18%, #577C4D 69%);
+  background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.18, #67965A), color-stop(0.69, #577C4D) );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#67965a', endColorstr='#577c4d',GradientType=0 );
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.qubit-opentag .login {
+  background-image: linear-gradient(bottom, #E35D3E 0%, #B3533E 100%);
+  background-image: -o-linear-gradient(bottom, #E35D3E 0%, #B3533E 100%);
+  background-image: -moz-linear-gradient(bottom, #E35D3E 0%, #B3533E 100%);
+  background-image: -webkit-linear-gradient(bottom, #E35D3E 0%, #B3533E 100%);
+  background-image: -ms-linear-gradient(bottom, #E35D3E 0%, #B3533E 100%);
+  background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, #E35D3E), color-stop(1, #B3533E) );
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.qubit-opentag .login:hover {
+  text-decoration: underline;
+}
+.qubit-opentag .signup:hover {
+  text-decoration: underline;
+}
+
+.qubit-opentag .message-container {
+  padding-left: 164px;
+  margin-top: 25px;
+}
+.qubit-opentag .message-container .running {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: inset 1px 1px 1px white;
+  font-size: 120%;
+  padding: 10px;
+  border: 1px solid #FBEED5;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.qubit-opentag .message-container .running.enabled {
+  color: #468847;
+  background-color: #DFF0D8;
+  border-color: #D6E9C6;
+}
+.qubit-opentag .message-container .running.disabled {
+  color: #C09853;
+  background-color: #FCF8E3;
+}
+.qubit-opentag .message-container .running pre {
+  margin: 0;
+}

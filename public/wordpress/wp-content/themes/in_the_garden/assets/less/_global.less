@@ -1,0 +1,50 @@
+body {
+  font-family:'Lato', sans-serif;
+  background:url(../img/Spring-grass-Background.jpg) no-repeat bottom center white;
+  background-size:cover;
+  background-attachment:fixed;
+}
+
+body.error404 {
+  .message {
+    padding:0 0 10% 0;
+    h2 {
+      font-size:120%;
+      line-height:1.3;
+    }
+    p {
+      margin-bottom:20px;
+    }
+  }
+}
+
+@media screen and (min-width:@screen-sm-min){
+  body.error404 {
+    .message {
+      h2, p {
+        text-align:center;
+      }
+      h2 {
+        font-size:170%;
+      }
+      p {
+        margin:5% 0;
+      }
+      
+      form.search-form {
+        margin:auto;
+        width:50%;
+        .input-group {
+          width:100%;
+          span.input-group-btn {
+            width:1%;
+          }
+        }
+      }
+
+      padding:5% 0 10% 0;
+      width:65%;
+      margin:auto;
+    }
+  }
+}

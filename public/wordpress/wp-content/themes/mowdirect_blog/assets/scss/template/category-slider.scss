@@ -1,0 +1,47 @@
+.category-posts-slider{
+     position: relative;
+     .slick-arrow{
+            background: var(--color-primary);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 6px;
+            left: auto;
+            top: calc(50% - 40px);
+            right: 15px;
+            margin-top: 0;
+            opacity: 1;
+            width: 40px;
+            height: 40px;
+            color: transparent;
+            border: 0;
+            cursor: pointer;
+            z-index: 1;
+            &:before{
+                content: '';
+                width: 10px;
+                height: 10px;
+                display: block;
+                transform: rotate(314deg);
+                border: 1px solid transparent;
+                margin: 15px 7px;
+            }
+            
+            &.slick-prev{
+                left: 15px;
+                right: auto;
+                  &:before{
+                        border-top-color:  var(--text-color-light);
+                        border-left-color:  var(--text-color-light);
+                        margin: 14px 10px;
+                    
+                  }  
+            }
+            &.slick-next{
+                &:before{
+                        border-bottom-color: var(--text-color-light);
+                        border-right-color:  var(--text-color-light);
+                }
+            }
+     }
+}

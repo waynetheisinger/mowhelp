@@ -1,0 +1,99 @@
+/* ------------------------- Page Home ------------------------------*/
+
+.home-post-slider {
+    * {
+        &:focus,
+        &:hover {
+            outline: none;
+        }
+    }
+}
+
+.home {
+    .elementor-shortcode {
+        .tab {
+            padding: 0 10px;
+            margin: 12px auto;
+            max-width: 400px;
+            width: 100%;
+            border: 2px solid $light-gray;
+            border-radius: 5px;
+            &:hover {
+                border: 2px solid $primary-color;
+                box-shadow: 1px 1px $box-shadow;
+                label {
+                    font-weight: bold;
+                }
+            }
+
+            input:checked+label::after {
+                content: '-';
+            }
+            input:checked~.tab-content {
+                margin-bottom: 12px;
+            }
+            .tab-content {
+                a {
+                    display: block;
+                    color: $text-color;
+                    margin-left: 55px;
+                    font-size: 14px;
+                    margin-bottom: 10px;
+                }
+            }
+            label {
+                width: 99%;
+                display: flex;
+                background-color: transparent;
+                align-items: center;
+                justify-content: flex-start;
+                border: 0;
+                margin: 0;
+                padding: 0;
+                height: 50px;
+                &:after {
+                    content: '+';
+                    width: 18px;
+                    height: 18px;
+                    border: 0;
+                    font-size: 24px;
+                    line-height: 15px;
+                    top: 15px;
+                    right: 10px;
+                    transform: none;
+                }
+                img {
+                    width: 35px;
+                    height: 35px;
+                    object-fit: contain;
+                    margin-right: 15px;
+                }
+                a {
+                    color: $text-color;
+                }
+            }
+            &:last-child {
+                label {
+                    font-family: "Font Awesome 5 Free";
+                    font-weight: 900;
+                    padding-left: 50px;
+                    background: url('https://wp1.dev.superbotics.in/wp-content/uploads/elementor/thumbs/earth-icon-opqiwlnvcn064fprhnjpt62lunt8y1net9dmbql1c0.png');
+                    background-repeat: no-repeat;
+                    background-size: 35px;
+                    background-position: 0 center;
+                    img {
+                        display: none;
+                    }
+                    &:after {
+                        content: '\f30b';
+                        font-size: 16px;
+                        line-height: 20px;
+                    }
+                }
+                input:checked+label::after {
+                    content: '\f30b';
+                }
+            }
+        }
+    }
+}

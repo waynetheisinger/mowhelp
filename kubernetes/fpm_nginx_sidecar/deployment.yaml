@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mowtalk
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: mowtalk
+  revisionHistoryLimit: 5
+  template: 
+    metadata:
+      labels:
+        app: mowtalk
+    spec:
+      volumes:
+        - name: shared
+          emptyDir: {}
+        - name: mowtalk-config-volume
+          configMap:
+            name: mowtalk-config
+      containers:
+        - name: nginx
+          image: nginx
+          volumeMounts:
+            - name: shared
+              mountPath: /var/www/html
+            - name: mowtalk-config-volume
+              mountPath: /etc/nginx/conf.d/mowtalk.conf
+              subPath: mowtalk.conf
+        - name: mowtalk
+          image: ghcr.io/it-jonction/mowtalk:0.0.6-delta
+          env:
+            - name: SPACES_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mowtalk-secrets
+                  key: SPACES_ACCESS_KEY_ID
+            - name: SPACES_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mowtalk-secrets
+                  key: SPACES_SECRET_ACCESS_KEY
+            - name: DOMAIN_CURRENT_SITE
+              valueFrom:
+                secretKeyRef:
+                  name: mowtalk-secrets
+                  key: DOMAIN_CURRENT_SITE
+            - name: WP_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mowtalk-secrets
+                  key: WP_DB_NAME
+            - name: WP_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mowtalk-secrets
+                  key: WP_DB_USER
+            - name: WP_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mowtalk-secrets
+                  key: WP_DB_PASSWORD
+            - name: WP_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: mowtalk-secrets
+                  key: WP_DB_HOST
+          volumeMounts:
+            - name: shared
+              mountPath: /var/www/html
+      imagePullSecrets:
+      - name: regcred

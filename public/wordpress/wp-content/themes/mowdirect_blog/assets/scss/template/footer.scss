@@ -1,0 +1,34 @@
+footer{
+    .home-social {
+        h2{
+            font-family: FuturaMedium !important;
+        }
+    }
+    .footer-categories{
+        .category-navigation{
+            overflow-x: hidden;
+            .category-list{
+                flex-wrap: wrap;
+                .category{
+                    margin-right: 0;
+                    margin-bottom: 15px;
+                    width: 50%;
+                    &:first-child{
+                        display: none;
+                    }
+                    @media screen and (max-width: 480px){
+                        width: 100%;
+                    }
+                    a{
+                        border: 0;
+                        padding: 0;
+                        height: auto;
+                        img{
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

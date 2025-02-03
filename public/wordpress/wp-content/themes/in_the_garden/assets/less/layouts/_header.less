@@ -1,0 +1,145 @@
+.social-bar {
+  .container {
+    background-color:@brand-primary;
+    padding-bottom:3px;
+  }
+  
+  .clearfix;
+  .icons {
+    float:right;
+    a {
+      img {
+        width:20px;
+      }
+    }
+  }
+}
+
+.banner {
+  .divider {
+    margin:auto;
+    max-width:1156px;
+    border-bottom:2px solid @brand-primary;
+  }
+  .clearfix;
+  margin-bottom:10px;
+  background-color:transparent;
+  //border-bottom:2px solid @brand-primary;
+  border-bottom:none;
+  a.navbar-brand {
+    height:auto;
+    float:left;
+    width:50%;
+    img {
+      width:100%;
+    }
+  }
+  .navbar-collapse {
+    border-top:none;
+  }
+  .container.content {
+    background-color:white;
+  }
+}
+
+#menu-primary-navigation {
+  text-transform:uppercase;
+  font-weight:bold;
+  a:link, a:visited {
+    color:black;
+  }
+  li.active a:link, li.active a:visited {
+    background-color:transparent;
+    color:@brand-primary;
+  }
+}
+
+@media(min-width:@screen-sm-min){
+
+  .banner {
+  
+    margin-bottom:0px;
+
+    .navbar-header {
+      width:37%;
+    }
+
+    form.search-form {
+      width: 37%;
+      float:right;
+      margin-top:30px;
+      .input-group {
+        width:100%;
+        float:right;
+        .input-group-btn {
+          width:1%;
+        }
+      }
+    }
+
+    a.navbar-brand {
+      width:100%;
+      padding-bottom:@grid-gutter-width;
+    }
+  }
+
+  #menu-primary-navigation {
+    float:right;
+    margin-top:17px;
+    a:link, a:visited {
+      padding:0px 7px 0px 7px;
+      font-size:90%;
+      border-right:1px solid @brand-primary;
+    }
+    li:last-child a:link {
+      padding-right:0;
+      border-right:none;
+    }
+  }
+}
+
+@media(min-width:@screen-md-min){
+
+  .banner {
+    
+    form.search-form {
+      margin-top:30px;
+      width: 32%;
+    }
+    .navbar-header {
+      width:30%;
+    }
+  }
+
+  #menu-primary-navigation {
+    margin-top:20px;
+    a:link, a:visited {
+      padding-right:10px;
+      padding-left:10px;
+      font-size:100%;
+    }
+  }
+}
+
+@media(min-width:@screen-lg-min){
+
+  .banner {
+    //padding-bottom:0;
+    form.search-form {
+      margin-top:30px;
+      width:29%;
+    }
+    .navbar-header {
+      width:28%;
+    }
+  }
+
+  #menu-primary-navigation {
+    margin-top:32px;
+    a:link, a:visited {
+      padding-right:10px;
+      padding-left:10px;
+      font-size:110%;
+    }
+  }
+}

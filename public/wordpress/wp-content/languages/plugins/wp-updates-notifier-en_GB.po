@@ -1,0 +1,220 @@
+# Translation of Plugins - WP Updates Notifier - Stable (latest release) in English (UK)
+# This file is distributed under the same license as the Plugins - WP Updates Notifier - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2020-04-22 15:02:34+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: en_GB\n"
+"Project-Id-Version: Plugins - WP Updates Notifier - Stable (latest release)\n"
+
+#: class-sc-wp-updates-notifier.php:1053
+msgid "Not requred."
+msgstr "Not required."
+
+#: class-sc-wp-updates-notifier.php:854
+msgid "Can not post test slack message. Slack settings are invalid."
+msgstr "Cannot post test Slack message. Slack settings are invalid."
+
+#: class-sc-wp-updates-notifier.php:846
+msgid "Can not send test email. Email settings are invalid."
+msgstr "Cannot send test email. Email settings are invalid."
+
+#: class-sc-wp-updates-notifier.php:825
+msgid "Invalid notification slack value entered"
+msgstr "Invalid notification Slack value entered"
+
+#: class-sc-wp-updates-notifier.php:815
+msgid "Channel name must not contain a space"
+msgstr "Channel name must not contain a space"
+
+#: class-sc-wp-updates-notifier.php:813
+msgid "Channel name must start with a # or @"
+msgstr "Channel name must start with # or @"
+
+#: class-sc-wp-updates-notifier.php:803
+msgid "Invalid webhook url entered"
+msgstr "Invalid webhook URL entered"
+
+#: class-sc-wp-updates-notifier.php:794
+msgid "Can not enable email notifications, addresses are not valid"
+msgstr "Cannot enable email notifications, addresses are not valid"
+
+#: class-sc-wp-updates-notifier.php:787
+msgid "Invalid notification email value entered"
+msgstr "Invalid notification email value entered"
+
+#: class-sc-wp-updates-notifier.php:701
+msgid "Channel to notify"
+msgstr "Channel to notify"
+
+#: class-sc-wp-updates-notifier.php:700
+msgid "Webhook url"
+msgstr "Webhook URL"
+
+#: class-sc-wp-updates-notifier.php:699
+msgid "Send slack notifications?"
+msgstr "Send Slack notifications?"
+
+#: class-sc-wp-updates-notifier.php:693
+msgid "Send email notifications?"
+msgstr "Send email notifications?"
+
+#: class-sc-wp-updates-notifier.php:670
+msgid "Save settings with test slack post"
+msgstr "Save settings with test Slack post"
+
+#. Author URI of the plugin
+msgid "https://scott.cariss.dev/"
+msgstr "https://scott.cariss.dev/"
+
+#. Author of the plugin
+msgid "Scott Cariss"
+msgstr "Scott Cariss"
+
+#. Plugin URI of the plugin
+msgid "https://github.com/l3rady/wp-updates-notifier"
+msgstr "https://github.com/l3rady/wp-updates-notifier"
+
+#: class-sc-wp-updates-notifier.php:932
+msgid "Yes but only active themes"
+msgstr "Yes but only active themes"
+
+#: class-sc-wp-updates-notifier.php:915
+msgid "Yes but only active plugins"
+msgstr "Yes but only active plugins"
+
+#: class-sc-wp-updates-notifier.php:913 class-sc-wp-updates-notifier.php:930
+#: class-sc-wp-updates-notifier.php:945 class-sc-wp-updates-notifier.php:959
+#: class-sc-wp-updates-notifier.php:981 class-sc-wp-updates-notifier.php:1027
+msgid "Yes"
+msgstr "Yes"
+
+#: class-sc-wp-updates-notifier.php:911 class-sc-wp-updates-notifier.php:928
+#: class-sc-wp-updates-notifier.php:960
+msgid "No"
+msgstr "No"
+
+#: class-sc-wp-updates-notifier.php:995
+msgid "Separate multiple email address with a comma (,)"
+msgstr "Separate multiple email address with a comma (,)"
+
+#: class-sc-wp-updates-notifier.php:867 class-sc-wp-updates-notifier.php:876
+msgid "This is a test message from WP Updates Notifier."
+msgstr "This is a test message from WP Updates Notifier."
+
+#: class-sc-wp-updates-notifier.php:748
+msgid "Invalid hide updates value entered"
+msgstr "Invalid hide updates value entered"
+
+#: class-sc-wp-updates-notifier.php:741
+msgid "Invalid automatic updates value entered"
+msgstr "Invalid automatic updates value entered"
+
+#: class-sc-wp-updates-notifier.php:734
+msgid "Invalid theme updates value entered"
+msgstr "Invalid theme updates value entered"
+
+#: class-sc-wp-updates-notifier.php:727
+msgid "Invalid plugin updates value entered"
+msgstr "Invalid plugin updates value entered"
+
+#: class-sc-wp-updates-notifier.php:779
+msgid "Invalid email from entered"
+msgstr "Invalid email from entered"
+
+#: class-sc-wp-updates-notifier.php:760
+msgid "One or more email to addresses are invalid"
+msgstr "One or more email to addresses are invalid"
+
+#: class-sc-wp-updates-notifier.php:720
+msgid "Invalid frequency entered"
+msgstr "Invalid frequency entered"
+
+#: class-sc-wp-updates-notifier.php:689
+msgid "Hide core WP update nag from non-admin users?"
+msgstr "Hide core WP update nag from non-admin users?"
+
+#: class-sc-wp-updates-notifier.php:688
+msgid "Notify automatic core updates to this address?"
+msgstr "Notify automatic core updates to this address?"
+
+#: class-sc-wp-updates-notifier.php:687
+msgid "Notify about theme updates?"
+msgstr "Notify about theme updates?"
+
+#: class-sc-wp-updates-notifier.php:686
+msgid "Notify about plugin updates?"
+msgstr "Notify about plugin updates?"
+
+#: class-sc-wp-updates-notifier.php:695
+msgid "Notify email from"
+msgstr "Notify email from"
+
+#: class-sc-wp-updates-notifier.php:694
+msgid "Notify email to"
+msgstr "Notify email to"
+
+#: class-sc-wp-updates-notifier.php:685
+msgid "Frequency to check"
+msgstr "Frequency to check"
+
+#: class-sc-wp-updates-notifier.php:669
+msgid "Save settings with test email"
+msgstr "Save settings with test email"
+
+#: class-sc-wp-updates-notifier.php:668
+msgid "Save settings"
+msgstr "Save settings"
+
+#: class-sc-wp-updates-notifier.php:648
+msgid "Never"
+msgstr "Never"
+
+#: class-sc-wp-updates-notifier.php:616 class-sc-wp-updates-notifier.php:642
+msgid "Updates Notifier"
+msgstr "Updates Notifier"
+
+#. Plugin Name of the plugin
+#: class-sc-wp-updates-notifier.php:477 class-sc-wp-updates-notifier.php:515
+msgid "WP Updates Notifier"
+msgstr "WP Updates Notifier"
+
+#: class-sc-wp-updates-notifier.php:451
+msgid "WP Updates Notifier: Updates Available @ %s"
+msgstr "WP Updates Notifier: Updates Available @ %s"
+
+#: class-sc-wp-updates-notifier.php:347
+msgid "Compatibility: %s"
+msgstr "Compatibility: %s"
+
+#: class-sc-wp-updates-notifier.php:345
+msgid "Compatibility with WordPress %1$s: Unknown"
+msgstr "Compatibility with WordPress %1$s: Unknown"
+
+#: class-sc-wp-updates-notifier.php:343
+msgid "Compatibility with WordPress %1$s: %2$d%% (%3$d \"works\" votes out of %4$d total)"
+msgstr "Compatibility with WordPress %1$s: %2$d%% (%3$d \"works\" votes out of %4$d total)"
+
+#: class-sc-wp-updates-notifier.php:340
+msgid "Compatibility with WordPress %1$s: 100%% (according to its author)"
+msgstr "Compatibility with WordPress %1$s: 100%% (according to its author)"
+
+#: class-sc-wp-updates-notifier.php:337
+msgid "Details: %s"
+msgstr "Details: %s"
+
+#: class-sc-wp-updates-notifier.php:261
+msgid "Please visit %s to update."
+msgstr "Please visit %s to update."
+
+#: class-sc-wp-updates-notifier.php:260
+msgid "There are updates available for your WordPress site:"
+msgstr "There are updates available for your WordPress site:"
+
+#: class-sc-wp-updates-notifier.php:232 class-sc-wp-updates-notifier.php:684
+msgid "Settings"
+msgstr "Settings"

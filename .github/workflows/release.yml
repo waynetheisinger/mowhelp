@@ -1,0 +1,48 @@
+name: CI
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    if: "!github.event.release.prerelease"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set output
+      id: vars
+      run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+    - name: Build image
+      env:
+        RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        IMAGE_NAME: 'ghcr.io/${{github.repository}}:${{ steps.vars.outputs.tag }}' 
+      run: |
+        IMAGE_NAME=$(echo $IMAGE_NAME | tr '[A-Z]' '[a-z]')
+        docker build . --file Dockerfile --tag $IMAGE_NAME 
+    - name: Log into registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    - name: Push image
+      env:
+        RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        IMAGE_NAME: 'ghcr.io/${{github.repository}}:${{ steps.vars.outputs.tag }}'     
+      run: |
+        IMAGE_NAME=$(echo $IMAGE_NAME | tr '[A-Z]' '[a-z]')
+        docker image push $IMAGE_NAME
+
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.ORG_DIGITALOCEAN_ACCESS_TOKEN }}
+
+    - name: Save DigitalOcean kubeconfig
+      run: doctl kubernetes cluster kubeconfig save it-jonction-kube
+
+    - name: Deploy to DigitalOcean Kubernetes
+      env:
+        IMAGE_NAME: 'ghcr.io/${{github.repository}}:${{ steps.vars.outputs.tag }}' 
+      run: |
+        IMAGE_NAME=$(echo $IMAGE_NAME | tr '[A-Z]' '[a-z]')
+        kubectl get deployment
+        kubectl set image --namespace=buyanddrop-m2 --record deployment/mowtalk mowtalk=$IMAGE_NAME
+
+    - name: Verify deployment
+      run: kubectl rollout status --namespace=buyanddrop-m2 deployment/mowtalk

@@ -1,0 +1,707 @@
+# Translation of Plugins - Breadcrumb NavXT - Stable (latest release) in Turkish
+# This file is distributed under the same license as the Plugins - Breadcrumb NavXT - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2018-09-26 15:29:14+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: GlotPress/3.0.0-alpha\n"
+"Language: tr\n"
+"Project-Id-Version: Plugins - Breadcrumb NavXT - Stable (latest release)\n"
+
+#: class.bcn_breadcrumb_trail.php:525
+msgid "$post global is not of type WP_Post"
+msgstr "$post global, WP_Post türü değil"
+
+#: includes/class.mtekk_adminkit.php:555
+msgid "Settings did not change, nothing to save."
+msgstr "Ayarlar değişmedi, kaydedilecek bir şey yok."
+
+#: includes/class.mtekk_adminkit.php:559
+msgid "Settings were not saved."
+msgstr "Ayarlar kaydedilemedi."
+
+#: class.bcn_network_admin.php:146 class.bcn_network_admin.php:164
+msgid "Warning: Individual site settings will override any settings set in this page."
+msgstr "Uyarı: Kişisel site ayarları, bu sayfada uygulanmış olan ayarları geçersiz kılar."
+
+#: class.bcn_network_admin.php:154 class.bcn_network_admin.php:158
+msgid "Warning: Individual site settings may override any settings set in this page."
+msgstr "Uyarı: Kişisel site ayarları, bu sayfada uygulanmış olan ayarları geçersiz kılabilir. "
+
+#: class.bcn_network_admin.php:44
+msgid "Breadcrumb NavXT Network Settings"
+msgstr "Breadcrumb NavXT Ağ Ayarları"
+
+#. Plugin Name of the plugin
+msgid "Breadcrumb NavXT"
+msgstr "Breadcrumb NavXT"
+
+#. Plugin URI of the plugin
+msgid "http://mtekk.us/code/breadcrumb-navxt/"
+msgstr "http://mtekk.us/code/breadcrumb-navxt/"
+
+#. Description of the plugin
+msgid "Adds a breadcrumb navigation showing the visitor&#39;s path to their current location. For details on how to use this plugin visit <a href=\"http://mtekk.us/code/breadcrumb-navxt/\">Breadcrumb NavXT</a>."
+msgstr "Ziyaretçinin mevcut konumundaki yolunu gösteren bir breadcrumb navigasyonu ekler. Bu eklentinin nasıl kullanılacağı hakkında ayrıntılı bilgi için <a href=\"http://mtekk.us/code/breadcrumb-navxt/\">Breadcrumb NavXT</a> sayfasını ziyaret edin."
+
+#. Author of the plugin
+msgid "John Havlik"
+msgstr "John Havlik"
+
+#. Author URI of the plugin
+msgid "http://mtekk.us/"
+msgstr "http://mtekk.us/"
+
+#: class.bcn_widget.php:116
+msgid "Text to show before the trail:"
+msgstr "Kuyruktan önce gösterilecek metin"
+
+#: class.bcn_widget.php:35
+msgid "Adds a breadcrumb trail to your sidebar"
+msgstr "Kenar çubuğunuza bir breadcrumb kuyruğu ekler"
+
+#: class.bcn_widget.php:112
+msgid "Title:"
+msgstr "Başlık:"
+
+#: class.bcn_widget.php:120
+msgid "Output trail as:"
+msgstr "Kuyruk çıktısı olarak:"
+
+#: class.bcn_widget.php:122
+msgid "List"
+msgstr "Liste"
+
+#: class.bcn_widget.php:125
+msgid "Plain"
+msgstr "Düz"
+
+#: class.bcn_widget.php:131
+msgid "Link the breadcrumbs"
+msgstr "Breadcrumbs bağlantısı"
+
+#: class.bcn_widget.php:133
+msgid "Reverse the order of the trail"
+msgstr "Kuyruk sırasını tersine çevir"
+
+#: class.bcn_widget.php:135
+msgid "Hide the trail on the front page"
+msgstr "Ön sayfada kuyruğu gizle"
+
+#: includes/class.mtekk_adminkit.php:247
+msgid "Settings"
+msgstr "Ayarlar"
+
+#: includes/class.mtekk_adminkit.php:324 includes/class.mtekk_adminkit.php:334
+msgid "Migrate the settings now."
+msgstr "Şimdi ayarları taşıyın."
+
+#: includes/class.mtekk_adminkit.php:324
+msgid "Migrate now."
+msgstr "Şimdi taşıyın."
+
+#: includes/class.mtekk_adminkit.php:342
+msgid "Your plugin install is incomplete."
+msgstr "Eklenti kurulumunuz tamamlanmadı."
+
+#: includes/class.mtekk_adminkit.php:343
+msgid "Load default settings now."
+msgstr "Şimdi varsayılan ayarları yükle."
+
+#: includes/class.mtekk_adminkit.php:343
+msgid "Complete now."
+msgstr "Şimdi tamamla."
+
+#: includes/class.mtekk_adminkit.php:352
+msgid "Attempt to fix settings now."
+msgstr "Şimdi ayarları düzeltmeyi deneyin."
+
+#: includes/class.mtekk_adminkit.php:352
+msgid "Fix now."
+msgstr "Şimdi düzelt."
+
+#: includes/class.mtekk_adminkit.php:550
+msgid "Settings successfully saved."
+msgstr "Ayarlar başarıyla kaydedildi."
+
+#: includes/class.mtekk_adminkit.php:551 includes/class.mtekk_adminkit.php:565
+msgid "Undo the options save."
+msgstr "Seçenekleri kaydetmeyi geri al."
+
+#: includes/class.mtekk_adminkit.php:551 includes/class.mtekk_adminkit.php:565
+#: includes/class.mtekk_adminkit.php:671 includes/class.mtekk_adminkit.php:696
+#: includes/class.mtekk_adminkit.php:714
+msgid "Undo"
+msgstr "Geri al"
+
+#: includes/class.mtekk_adminkit.php:564
+msgid "Some settings were not saved."
+msgstr "Bazı ayarlar kaydedilmedi."
+
+#: includes/class.mtekk_adminkit.php:566
+msgid "The following settings were not saved:"
+msgstr "Aşağıdaki ayarları kaydedilmedi:"
+
+#: includes/class.mtekk_adminkit.php:571
+msgid "Please include this message in your %sbug report%s."
+msgstr "Lütfen bu mesajı %sbug report%s içine dahil edin."
+
+#: includes/class.mtekk_adminkit.php:670
+msgid "Settings successfully imported from the uploaded file."
+msgstr "Ayarlar yüklenen dosyadan başarıyla içe aktarıldı."
+
+#: includes/class.mtekk_adminkit.php:671
+msgid "Undo the options import."
+msgstr "Seçenekleri içe aktarmayı geri al."
+
+#: includes/class.mtekk_adminkit.php:676
+msgid "Importing settings from file failed."
+msgstr "Ayarları dosyadan içe aktarma başarısız oldu."
+
+#: includes/class.mtekk_adminkit.php:695
+msgid "Settings successfully reset to the default values."
+msgstr "Ayarlar varsayılan değerlere başarıyla sıfırlandı."
+
+#: includes/class.mtekk_adminkit.php:696
+msgid "Undo the options reset."
+msgstr "Seçenekleri sıfırlamayı geri al."
+
+#: includes/class.mtekk_adminkit.php:713
+msgid "Settings successfully undid the last operation."
+msgstr "Ayarlar son işleme başarıyla getirildi."
+
+#: includes/class.mtekk_adminkit.php:714
+msgid "Undo the last undo operation."
+msgstr "Son geri alma işlemini geri al."
+
+#: includes/class.mtekk_adminkit.php:749
+msgid "Settings successfully migrated."
+msgstr "Ayarlar başarıyla taşındı."
+
+#: includes/class.mtekk_adminkit.php:756
+msgid "Default settings successfully installed."
+msgstr "Varsayılan ayarlar başarıyla yüklendi."
+
+#: includes/class.mtekk_adminkit.php:869
+msgid "Import settings from a XML file, export the current settings to a XML file, or reset to the default settings."
+msgstr "Ayarları bir XML dosyasından içe aktar, mevcut ayarları bir XML dosyasına aktar veya varsayılan ayarlara sıfırla."
+
+#: includes/class.mtekk_adminkit.php:872
+msgid "Settings File"
+msgstr "Ayarlar Dosyası"
+
+#: includes/class.mtekk_adminkit.php:875
+msgid "Select a XML settings file to upload and import settings from."
+msgstr "Ayarları yüklemek ve içe aktarmak için bir XML ayarlar dosyası seçin."
+
+#: class.bcn_admin.php:446
+msgid "Warning: Your are using a deprecated setting \"Title Length\" (see Miscellaneous &gt; Deprecated), please %1$suse CSS instead%2$s."
+msgstr "Uyarı: Kullanımı önerilmeyen bir ayar \"Başlık Uzunluğu\" kullanıyorsunuz (Çeşitli &gt; Kullanım dışı sayfasına bakın), lütfen %1$syerine CSS kullanın%2$s."
+
+#: class.bcn_admin.php:446 class.bcn_admin.php:757
+msgid "Go to the guide on trimming breadcrumb title lengths with CSS"
+msgstr "CSS ile breadcrumb başlık uzunluklarını kırpma üzerindeki kılavuza gidin."
+
+#: class.bcn_admin.php:545
+msgid "Show the hierarchy (specified below) leading to a post in the breadcrumb trail."
+msgstr "Breadcrumb kuyruğunda bir yazıya öncülük eden hiyerarşiyi göster (altta belirtilen)."
+
+#: class.bcn_admin.php:620
+msgid "Show the hierarchy (specified below) leading to a %s in the breadcrumb trail."
+msgstr "Breadcrumb kuyruğunda bir %s öncülük eden hiyerarşiyi göster (altta belirtilen)."
+
+#: class.bcn_admin.php:748
+msgid "Deprecated"
+msgstr "Kullanım dışı"
+
+#: class.bcn_admin.php:757
+msgid "Limit the length of the breadcrumb title. (Deprecated, %suse CSS instead%s)"
+msgstr "Breadcrumb başlık uzunluğunu sınırla. (Kullanım dışı, %syerine CSS kullan%s)"
+
+#: class.bcn_admin.php:421
+msgid "Warning: Your network settings will override any settings set in this page."
+msgstr "Uyarı: Ağ ayarlarınız, bu sayfada uygulanmış olan ayarları geçersiz kılar."
+
+#: class.bcn_admin.php:425 class.bcn_admin.php:429
+msgid "Warning: Your network settings may override any settings set in this page."
+msgstr "Uyarı: Ağ ayarlarınız, bu sayfada uygulanmış olan ayarları geçersiz kılabilir."
+
+#: class.bcn_admin.php:575 class.bcn_admin.php:656
+msgid "The hierarchy which the breadcrumb trail will show. Note that the \"Post Parent\" option may require an additional plugin to behave as expected since this is a non-hierarchical post type."
+msgstr "Breadcrumb kuyruğunda gösterilecek hiyerarşi. Bu hiyerarşik olmayan bir yazı tipi olduğundan dolayı beklenileni sağlaması için \"Post Parent\" seçeneğinin ilave bir eklenti gerektirebileceğini unutmayın."
+
+#: class.bcn_admin.php:494
+msgid "A collection of settings most likely to be modified are located under this tab."
+msgstr "Değiştirilmesi muhtemel ayarların bir bölümü bu sekme altında yer almaktadır."
+
+#: class.bcn_admin.php:752
+msgid "Title Length"
+msgstr "Başlık Uzunluğu"
+
+#: class.bcn_admin.php:527
+msgid "Mainsite Breadcrumb"
+msgstr "Anasite Breadcrumb"
+
+#: class.bcn_admin.php:539
+msgid "The settings for all post types (Posts, Pages, and Custom Post Types) are located under this tab."
+msgstr "Tüm yazı tipleri (Yazılar, Sayfalar ve Özel Yazı Türleri) için ayarlar bu sekme altında yer almaktadır."
+
+#: class.bcn_admin.php:539
+msgid "Post Types"
+msgstr "Yazı Tipleri"
+
+#: class.bcn_admin.php:545
+msgid "Post Hierarchy Display"
+msgstr "Yazı Hiyerarşi Görünümü"
+
+#: class.bcn_admin.php:551
+msgid "Post Hierarchy"
+msgstr "Yazı Hiyerarşisi"
+
+#: class.bcn_admin.php:620
+msgid "%s Hierarchy Display"
+msgstr "%s Hiyerarşisi Görünümü"
+
+#: class.bcn_admin.php:685
+msgid "Post Formats"
+msgstr "Yazı Biçimleri"
+
+#: class.bcn_admin.php:762
+msgid "Max Title Length: "
+msgstr "Maksimum Başlık Uzunluğu: "
+
+#: class.bcn_admin.php:540
+msgid "Posts"
+msgstr "Yazılar"
+
+#: class.bcn_admin.php:559 class.bcn_admin.php:631
+msgid "Post Parent"
+msgstr "Yazı Ebeveyni"
+
+#: class.bcn_admin.php:652
+msgid "The hierarchy which the breadcrumb trail will show."
+msgstr "Breadcrumb kuyruğunda gösterilecek hiyerarşi."
+
+#: class.bcn_admin.php:626
+msgid "%s Hierarchy"
+msgstr "%s Hiyerarşisi"
+
+#: class.bcn_admin.php:670
+msgid "The settings for all taxonomies (including Categories, Tags, and custom taxonomies) are located under this tab."
+msgstr "Tüm sınıflandırmalar için (Kategoriler, Etiketler, ve özel sınıflandırmalar dahil) ayarlar bu sekme altında yer almaktadır."
+
+#: class.bcn_admin.php:670
+msgid "Taxonomies"
+msgstr "Sınıflandırmalar"
+
+#: class.bcn_admin.php:688
+msgid "Post Format Template"
+msgstr "Yazı Biçim Şablonu"
+
+#: class.bcn_admin.php:688
+msgid "The template for post format breadcrumbs."
+msgstr "Yazı biçimi breadcrumbs için şablon."
+
+#: class.bcn_admin.php:689
+msgid "Post Format Template (Unlinked)"
+msgstr "Yazı Biçim Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:689
+msgid "The template for post_format breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan post_format breadcrumbs şablonu."
+
+#: class.bcn_admin.php:719
+msgid "The settings for author and date archives, searches, and 404 pages are located under this tab."
+msgstr "Yazar ve tarih arşivleri, arama ve 404 sayfaları için ayarlar bu sekme altında yer almaktadır."
+
+#: class.bcn_admin.php:720
+msgid "Author Archives"
+msgstr "Yazar Arşivleri"
+
+#: class.bcn_admin.php:332
+msgid "Go to the Breadcrumb NavXT translation project."
+msgstr "Breadcrumb NavXT çeviri projesine gidin."
+
+#: class.bcn_rest_controller.php:26 breadcrumb-navxt.php:36
+#: class.bcn_admin.php:26
+msgid "Your PHP version is too old, please upgrade to a newer version. Your version is %1$s, Breadcrumb NavXT requires %2$s"
+msgstr "PHP sürümünüz çok eski, lütfen yeni bir sürüme güncelleyin. Sürümünüz %1$s, Breadcrumb NavXT için %2$s sürümü gerekir"
+
+#: includes/class.mtekk_adminkit.php:121
+msgid "Insufficient privileges to proceed."
+msgstr "Devam etmek için yetersiz yetki."
+
+#: class.bcn_admin.php:325
+msgid "Tips for the settings are located below select options."
+msgstr "Ayarlar için ipuçları seçeneklerin altında yer almaktadır."
+
+#: class.bcn_admin.php:326
+msgid "Resources"
+msgstr "Kaynaklar"
+
+#: class.bcn_admin.php:327
+msgid "%sTutorials and How Tos%s: There are several guides, tutorials, and how tos available on the author's website."
+msgstr "%sEğitim ve İpuçları%s: Yazarın web sitesinde çeşitli kılavuzlar, eğitim ve ipuçlarını bulabilirsiniz."
+
+#: class.bcn_admin.php:327
+msgid "Go to the Breadcrumb NavXT tag archive."
+msgstr "Breadcrumb NavXT etiket arşivine gidin."
+
+#: class.bcn_admin.php:328
+msgid "%sOnline Documentation%s: Check out the documentation for more indepth technical information."
+msgstr "%sÇevrimiçi Belgeler%s: Daha detaylı teknik bilgiler için belgelere göz atın."
+
+#: class.bcn_admin.php:328
+msgid "Go to the Breadcrumb NavXT online documentation"
+msgstr "Breadcrumb NavXT çevrimiçi belgelere gidin"
+
+#: class.bcn_admin.php:329
+msgid "%sReport a Bug%s: If you think you have found a bug, please include your WordPress version and details on how to reproduce the bug."
+msgstr "%sBir Hata Bildir%s: Eğer bir hata bulduğunuzu düşünüyorsanız, WordPress sürümünüz ve hatanın yeniden nasıl oluşturulacağına ilişkin ayrıntıları ekleyin."
+
+#: class.bcn_admin.php:329
+msgid "Go to the Breadcrumb NavXT support post for your version."
+msgstr "Sürümünüz için Breadcrumb NavXT destek yazısına gidin."
+
+#: class.bcn_admin.php:330
+msgid "Giving Back"
+msgstr "İade"
+
+#: class.bcn_admin.php:331
+msgid "%sDonate%s: Love Breadcrumb NavXT and want to help development? Consider buying the author a beer."
+msgstr "%sBağış%s: Breadcrumb NavXT sevdiniz ve geliştirilmesine yardımcı mı olmak istiyor sunuz? Yazara bir bira satın almayı düşünün."
+
+#: class.bcn_admin.php:331
+msgid "Go to PayPal to give a donation to Breadcrumb NavXT."
+msgstr "Breadcrumb NavXT'ye bir bağış yapmak için PayPal'a gidin."
+
+#: class.bcn_admin.php:337 class.bcn_admin.php:494 class.bcn_admin.php:495
+msgid "General"
+msgstr "Genel"
+
+#: class.bcn_admin.php:340
+msgid "For the settings on this page to take effect, you must either use the included Breadcrumb NavXT widget, or place either of the code sections below into your theme."
+msgstr "Bu sayfadaki ayarların etkili olabilmesi için, Breadcrumb NavXT bileşenini kullanmanız veya temanıza aşağıdaki kod bölümlerinden yerleştirmeniz gerekir."
+
+#: class.bcn_admin.php:341
+msgid "Breadcrumb trail with separators"
+msgstr "Ayırıcılar ile Breadcrumb kuyruğu"
+
+#: class.bcn_admin.php:347
+msgid "Breadcrumb trail in list form"
+msgstr "Liste biçiminde Breadcrumb kuyruğu"
+
+#: class.bcn_admin.php:356
+msgid "Quick Start"
+msgstr "Hızlı Başlangıç"
+
+#: class.bcn_admin.php:359
+msgid "Using the code from the Quick Start section above, the following CSS can be used as base for styling your breadcrumb trail."
+msgstr "Yukarıda Hızlı Başlat bölümündeki kodu kullanarak, alttaki CSS breadcumb kuyruğunu şekillendirmeye temel olarak kullanılabilirsiniz."
+
+#: class.bcn_admin.php:371
+msgid "Styling"
+msgstr "Şekillendirme"
+
+#: class.bcn_admin.php:377
+msgid "Import/Export/Reset"
+msgstr "İçe aktar/Dışa aktar/Sıfırla"
+
+#: includes/class.mtekk_adminkit.php:877 class.bcn_admin.php:401
+msgid "Import"
+msgstr "İçe aktar"
+
+#: includes/class.mtekk_adminkit.php:878 class.bcn_admin.php:402
+msgid "Export"
+msgstr "Dışa aktar"
+
+#: includes/class.mtekk_adminkit.php:879 class.bcn_admin.php:403
+msgid "Reset"
+msgstr "Sıfırla"
+
+#: class.bcn_admin.php:65
+msgid "Breadcrumb NavXT Settings"
+msgstr "Breadcrumb NavXT Ayarları"
+
+#: class.bcn_admin.php:498
+msgid "Breadcrumb Separator"
+msgstr "Breadcrumb Ayırıcı"
+
+#: class.bcn_admin.php:498
+msgid "Placed in between each breadcrumb."
+msgstr "Her breadcrumb arasına yerleştirilir."
+
+#: class.bcn_admin.php:511 class.bcn_admin.php:514
+msgid "Home Breadcrumb"
+msgstr "Anasayfa Breadcrumb"
+
+#: class.bcn_admin.php:514
+msgid "Place the home breadcrumb in the trail."
+msgstr "Breadcrumb kuyruğuna anasayfa yerleştirin."
+
+#: class.bcn_admin.php:515
+msgid "Home Template"
+msgstr "Anasayfa Şablonu"
+
+#: class.bcn_admin.php:515
+msgid "The template for the home breadcrumb."
+msgstr "Anasayfa breadcrumb için şablon."
+
+#: class.bcn_admin.php:516
+msgid "Home Template (Unlinked)"
+msgstr "Anasayfa Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:516
+msgid "The template for the home breadcrumb, used when the breadcrumb is not linked."
+msgstr "Breadcrumb için bağlantı olmadığında kullanılan breadcrumb anasayfa şablonu."
+
+#: class.bcn_admin.php:520 class.bcn_admin.php:523
+msgid "Blog Breadcrumb"
+msgstr "Blog Breadcrumb"
+
+#: class.bcn_admin.php:523
+msgid "Place the blog breadcrumb in the trail."
+msgstr "Breadcrumb kuyruğuna blog yerleştirin."
+
+#: class.bcn_admin.php:530
+msgid "Main Site Breadcrumb"
+msgstr "Ana Site Breadcrumb"
+
+#: class.bcn_admin.php:530
+msgid "Place the main site home breadcrumb in the trail in an multisite setup."
+msgstr "Çoklu site kurulumlarında ana site anasayfa breadcrumb bağlantısını kuyruğa yerleştirir."
+
+#: class.bcn_admin.php:531
+msgid "Main Site Home Template"
+msgstr "Ana Site Anasayfa Şablonu"
+
+#: class.bcn_admin.php:531
+msgid "The template for the main site home breadcrumb, used only in multisite environments."
+msgstr "Çoklu site ortamında kullanılan breadcrumb ana site anasayfa şablonu."
+
+#: class.bcn_admin.php:532
+msgid "Main Site Home Template (Unlinked)"
+msgstr "Ana Site Anasayfa Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:532
+msgid "The template for the main site home breadcrumb, used only in multisite environments and when the breadcrumb is not linked."
+msgstr "Sadece, çoklu site ortamlarında ve breadcrumb için bağlantı olmadığında kullanılan ana site anasayfa breadcrumb şablonu."
+
+#: class.bcn_admin.php:502
+msgid "Current Item"
+msgstr "Mevcut Öğe"
+
+#: class.bcn_admin.php:505
+msgid "Link Current Item"
+msgstr "Mevcut Öğeye Bağlantı"
+
+#: class.bcn_admin.php:505
+msgid "Yes"
+msgstr "Evet"
+
+#: class.bcn_admin.php:507
+msgid "The template for paged breadcrumbs."
+msgstr "Sayfalanmış breadcrumbs için şablon."
+
+#: class.bcn_admin.php:543
+msgid "Post Template"
+msgstr "Yazı Şablonu"
+
+#: class.bcn_admin.php:543
+msgid "The template for post breadcrumbs."
+msgstr "Yazı breadcrumbs için şablon."
+
+#: class.bcn_admin.php:544
+msgid "Post Template (Unlinked)"
+msgstr "Yazı Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:544
+msgid "The template for post breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan yazı breadcrumbs şablonu."
+
+#: class.bcn_admin.php:555 class.bcn_admin.php:671
+msgid "Categories"
+msgstr "Kategoriler"
+
+#: class.bcn_admin.php:556 class.bcn_admin.php:632
+msgid "Dates"
+msgstr "Tarihler"
+
+#: class.bcn_admin.php:557 class.bcn_admin.php:678
+msgid "Tags"
+msgstr "Etiketler"
+
+#: class.bcn_admin.php:579
+msgid "Pages"
+msgstr "Sayfalar"
+
+#: class.bcn_admin.php:582
+msgid "Page Template"
+msgstr "Sayfa Şablonu"
+
+#: class.bcn_admin.php:582
+msgid "The template for page breadcrumbs."
+msgstr "Sayfa breadcrumbs için şablon."
+
+#: class.bcn_admin.php:583
+msgid "Page Template (Unlinked)"
+msgstr "Sayfa Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:583
+msgid "The template for page breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan sayfa breadcrumbs şablonu."
+
+#: class.bcn_admin.php:606 class.bcn_admin.php:709
+msgid "%s Template"
+msgstr "%s Şablonu"
+
+#: class.bcn_admin.php:606 class.bcn_admin.php:709
+msgid "The template for %s breadcrumbs."
+msgstr "%s breadcrumbs için şablon."
+
+#: class.bcn_admin.php:607 class.bcn_admin.php:710
+msgid "%s Template (Unlinked)"
+msgstr "%s Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:607 class.bcn_admin.php:710
+msgid "The template for %s breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan %s breadcrumbs şablonu."
+
+#: class.bcn_admin.php:612
+msgid "%s Root Page"
+msgstr "%s Kök Sayfası"
+
+#: class.bcn_admin.php:615 class.bcn_admin.php:733
+msgid "&mdash; Select &mdash;"
+msgstr "&mdash; Seç &mdash;"
+
+#: class.bcn_admin.php:619
+msgid "%s Archive Display"
+msgstr "%s Arşiv Görünümü"
+
+#: class.bcn_admin.php:619
+msgid "Show the breadcrumb for the %s post type archives in the breadcrumb trail."
+msgstr "Breadcrumb kuyruğunda %s yazı tipi arşivleri için breadcrumb göster."
+
+#: class.bcn_admin.php:674
+msgid "Category Template"
+msgstr "Kategori Şablonu"
+
+#: class.bcn_admin.php:674
+msgid "The template for category breadcrumbs."
+msgstr "Kategori breadcrumbs için şablon."
+
+#: class.bcn_admin.php:675
+msgid "Category Template (Unlinked)"
+msgstr "Kategori Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:675
+msgid "The template for category breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan kategori breadcrumbs şablonu."
+
+#: class.bcn_admin.php:681
+msgid "Tag Template"
+msgstr "Etiket Şablonu"
+
+#: class.bcn_admin.php:681
+msgid "The template for tag breadcrumbs."
+msgstr "Etiket breadcrumbs için şablon."
+
+#: class.bcn_admin.php:682
+msgid "Tag Template (Unlinked)"
+msgstr "Etiket Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:682
+msgid "The template for tag breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan etiket breadcrumbs şablonu."
+
+#: class.bcn_admin.php:719 class.bcn_admin.php:737
+msgid "Miscellaneous"
+msgstr "Çeşitli"
+
+#: class.bcn_admin.php:723
+msgid "Author Template"
+msgstr "Yazar Şablonu"
+
+#: class.bcn_admin.php:723
+msgid "The template for author breadcrumbs."
+msgstr "Yazar breadcrumbs için şablon."
+
+#: class.bcn_admin.php:724
+msgid "Author Template (Unlinked)"
+msgstr "Yazar Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:724
+msgid "The template for author breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan yazar breadcrumbs şablonu."
+
+#: class.bcn_admin.php:725
+msgid "Author Display Format"
+msgstr "Yazar Gösterim Formatı"
+
+#: class.bcn_admin.php:725
+msgid "display_name uses the name specified in \"Display name publicly as\" under the user profile the others correspond to options in the user profile."
+msgstr "display_name kullanıcı profili altında diğer kullanıcıların profilindeki seçeneklere karşılık gelen \"Herkes tarafından görülecek ad\" içinde belirtilen adı kullanır."
+
+#: class.bcn_admin.php:740
+msgid "Date Template"
+msgstr "Tarih Şablonu"
+
+#: class.bcn_admin.php:740
+msgid "The template for date breadcrumbs."
+msgstr "Tarih breadcrumbs için şablon."
+
+#: class.bcn_admin.php:741
+msgid "Date Template (Unlinked)"
+msgstr "Tarih Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:741
+msgid "The template for date breadcrumbs, used only when the breadcrumb is not linked."
+msgstr "Sadece, breadcrumb için bağlantı olmadığında kullanılan tarih breadcrumbs şablonu."
+
+#: class.bcn_admin.php:742
+msgid "Search Template"
+msgstr "Arama Şablonu"
+
+#: class.bcn_admin.php:742
+msgid "The anchor template for search breadcrumbs, used only when the search results span several pages."
+msgstr "Sadece, arama sonuçları birkaç sayfaya yayıldığında kullanılan arama breadcrumbs için bağlantı şablonu."
+
+#: class.bcn_admin.php:743
+msgid "Search Template (Unlinked)"
+msgstr "Arama Şablonu (Bağlantısız)"
+
+#: class.bcn_admin.php:743
+msgid "The anchor template for search breadcrumbs, used only when the search results span several pages and the breadcrumb is not linked."
+msgstr "Sadece, arama sonuçları birkaç sayfaya yayıldığında ve breadcrumb için bağlantı olmadığında kullanılan arama breadcrumbs için bağlantı şablonu."
+
+#: class.bcn_admin.php:744
+msgid "404 Title"
+msgstr "404 Başlığı"
+
+#: class.bcn_admin.php:745
+msgid "404 Template"
+msgstr "404 Şablonu"
+
+#: class.bcn_admin.php:745
+msgid "The template for 404 breadcrumbs."
+msgstr "404 breadcrumbs için şablon."
+
+#: class.bcn_admin.php:774
+msgid "Save Changes"
+msgstr "Değişiklikleri Kaydet"
+
+#: class.bcn_breadcrumb_trail.php:79
+msgid "Page %htitle%"
+msgstr "Sayfa %htitle%"
+
+#: class.bcn_breadcrumb_trail.php:116
+msgid "404"
+msgstr "404"
+
+#: class.bcn_breadcrumb_trail.php:120 class.bcn_breadcrumb_trail.php:124
+msgid "Search results for &#39;%1$s&#39;"
+msgstr "&#39;%1$s&#39; için arama sonuçları"

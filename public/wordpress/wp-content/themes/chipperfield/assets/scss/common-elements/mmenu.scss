@@ -1,0 +1,54 @@
+/* ----------------- Mega Menu -----------------------------------*/
+
+#mm-menu {
+    position: fixed;
+    z-index: 8;
+    box-shadow: 0vw 19vw 100vw 100vw rgba(0, 0, 0, 0.5);
+    top: -200vw;
+    transition: top .5s ease-in-out;
+    @media screen and (max-width: 800px){
+        box-shadow: none;
+    }
+    .elementor-row {
+        @media screen and(max-width: 767px) {
+            overflow: auto;
+            height: calc(100vh - 77px);
+            .elementor-row {
+                height: auto;
+            } 
+        }
+    }
+
+    &.active {
+        top: 77px;
+         @media screen and(max-width: 767px) {
+              top: 11vw;   
+         }
+    }
+
+}
+
+body.admin-bar {
+    #mmenu {
+        top: 106px;
+    }
+}
+
+#mm-menu .menu-content h5 {
+    margin: 5px 0;
+    line-height: normal;
+    font-weight: 400;
+}
+
+#mm-menu .menu-content h5 a{
+     color: $text-color;   
+}
+
+#mm-menu .menu-content ul {
+    margin: 15px 0;
+}
+
+#mm-menu .menu-content ul li a {
+    font-size: 16px;
+    color: $text-color;
+}

@@ -1,0 +1,48 @@
+/* --------------------------- Slick Customize -------------------------- */
+
+.slick-arrow {
+    width: 90px;
+    height: 70px;
+    background-color: $primary-color!important;
+    position: absolute;
+    bottom: 0;
+    color: transparent;
+    bottom: -40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    &:hover { 
+        background-color: $text-color;
+    }
+    &:focus {
+        outline: none;
+    }
+    &.slick-prev {
+        left: -90px;
+        &:after {
+            content: "\f30a";
+        }
+    }
+    &.slick-next {
+        right: -90px;
+        &:after {
+            content: "\f30b";
+        }
+    }
+    &:after {
+        content: '';
+        color: $white-color;
+        position: absolute;
+        font-size: 24px;
+    }
+}
+
+.slick-slider{
+  *{
+      &:focus{
+          outline: none;
+      }
+  } 
+}

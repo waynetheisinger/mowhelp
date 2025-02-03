@@ -1,0 +1,55 @@
+.archive{
+      .category-banner{
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        &:before{
+            content: '';
+            width: 100%;
+            height: 100%;
+            display: block;
+            background-color: rgba(0, 0, 0, 0.2 );
+            position: absolute;
+        }
+    }
+    &.category-the-lawn{
+          .category-banner{
+               background-image: url('../images/category/banner/3692.jpg');
+          }
+    }
+    &.category-cutting-stuff{
+          .category-banner{
+               background-image: url('../images/category/banner/3693.jpg');
+          }
+    }
+    &.category-our-news{
+          .category-banner{
+               background-image: url('../images/category/banner/3701.jpg');
+          }
+    }
+    &.category-drew{
+        .category-banner{
+               background-image: url('../images/category/banner/3702.jpg');
+         }
+    }
+    &.category-dick{
+         .category-banner{
+               background-image: url('../images/category/banner/3695.jpg');
+         }
+    }
+    &.category-hints-and-tips{
+        .category-banner{
+               background-image: url('../images/category/banner/3696.jpg');
+         }
+    }
+    &.category-garden-power {
+         .category-banner{
+               background-image: url('../images/category/banner/3700.jpg');
+         }
+    }
+    &.category-growing-stuff{
+         .category-banner{
+               background-image: url('../images/category/banner/3694.jpg');
+         }
+    }
+}
