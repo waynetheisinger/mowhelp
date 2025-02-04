@@ -3,8 +3,9 @@
 /**
  *
  * @package templates/default
- *
  */
+
+use Duplicator\Installer\Utils\InstallerLinkManager;
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 
@@ -41,6 +42,15 @@ When this value is lower than the suggested minimum of
 <ul>
     <li>
         Try Increasing the memory_limit.&nbsp;
-        <a href="https://snapcreek.com/duplicator/docs/faqs-tech/?210328131212#faq-trouble-056-q" target="_blank">[Additional FAQ Help]</a>
+        <a 
+            href="<?php echo InstallerLinkManager::getDocUrl(
+                'how-to-manage-server-resources-cpu-memory-disk',
+                'install',
+                'validation memory limit'
+            ); ?>" 
+            target="_blank"
+        >
+            [Additional FAQ Help]
+        </a>
     </li>
 </ul>

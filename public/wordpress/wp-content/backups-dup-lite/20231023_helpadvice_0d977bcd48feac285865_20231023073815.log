@@ -1,0 +1,76 @@
+********************************************************************************
+DUPLICATOR-LITE PACKAGE-LOG: October 23, 2023 7:38 am
+NOTICE: Do NOT post to public sites or forums 
+********************************************************************************
+VERSION:	1.5.6
+WORDPRESS:	6.0.6
+PHP INFO:	7.4.29 | SAPI: fpm-fcgi
+SERVER:		nginx/1.18.0 
+PHP TIME LIMIT: (0) no time limit imposed 
+PHP MAX MEMORY: 4294967296 (756M default) 
+MEMORY STACK: 2MB
+
+********************************************************************************
+DATABASE:
+********************************************************************************
+BUILD MODE:   MYSQLDUMP
+MYSQLTIMEOUT: 5000
+MYSQLDUMP:    Is Supported
+MYSQL DUMP ERROR 2
+
+==================================================================================
+DUPLICATOR ERROR
+Please try again! If the error persists see the Duplicator 'Help' menu.
+---------------------------------------------------------------------------------
+MESSAGE:
+	Shell mysql dump error. Change SQL Mode to the "PHP Code" in the Duplicator > Settings > Packages.
+DETAILS:
+	mysqldump: Couldn't execute 'FLUSH TABLES': Access denied; you need (at least one of) the RELOAD or FLUSH_TABLES privilege(s) for this operation (1227)
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/* Duplicator WordPress Timestamp: 2023-10-23 07:38:25*/
+/* DUPLICATOR_MYSQLDUMP_EOF */
+TRACE:
+	 1. class.pack.database.php : error (606)
+	 2. class.pack.database.php : mysqlDump (230)
+	 3. class.pack.php : build (1369)
+	 4. ctrl.package.php : runZipBuild (89)
+	 5. class-wp-hook.php : duplicator_package_build (307)
+	 6. class-wp-hook.php : apply_filters (331)
+	 7. plugin.php : do_action (476)
+	 8. admin-ajax.php : do_action (187)
+==================================================================================
+
+
+==================================================================================
+DUPLICATOR ERROR
+Please try again! If the error persists see the Duplicator 'Help' menu.
+---------------------------------------------------------------------------------
+MESSAGE:
+	Runtime error in DUP_Database::Build. Shell mysql dump error. Change SQL Mode to the "PHP Code" in the Duplicator > Settings > Packages.
+DETAILS:
+	Exception: Exception: Shell mysql dump error. Change SQL Mode to the "PHP Code" in the Duplicator > Settings > Packages. in /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-content/plugins/duplicator/classes/class.logging.php:301
+Stack trace:
+#0 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-content/plugins/duplicator/classes/package/class.pack.database.php(606): DUP_Log::error()
+#1 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-content/plugins/duplicator/classes/package/class.pack.database.php(230): DUP_Database->mysqlDump()
+#2 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-content/plugins/duplicator/classes/package/class.pack.php(1369): DUP_Database->build()
+#3 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-content/plugins/duplicator/ctrls/ctrl.package.php(89): DUP_Package->runZipBuild()
+#4 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-includes/class-wp-hook.php(307): duplicator_package_build()
+#5 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-includes/class-wp-hook.php(331): WP_Hook->apply_filters()
+#6 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-includes/plugin.php(476): WP_Hook->do_action()
+#7 /mnt/buyanddrop_uk/help-and-advice-prod/help-and-advice/wp-admin/admin-ajax.php(187): do_action()
+#8 {main}
+TRACE:
+	 1. class.pack.database.php : error (259)
+	 2. class.pack.php : build (1369)
+	 3. ctrl.package.php : runZipBuild (89)
+	 4. class-wp-hook.php : duplicator_package_build (307)
+	 5. class-wp-hook.php : apply_filters (331)
+	 6. plugin.php : do_action (476)
+	 7. admin-ajax.php : do_action (187)
+==================================================================================
+

@@ -1,0 +1,72 @@
+.footer-subscribe-social {
+  background-image: url(../image/news-letter-background.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px;
+  width: 100%;
+  box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 40px; }
+  .footer-subscribe-social .block.newsletter {
+    display: flex;
+    max-width: 100%;
+    margin: 0;
+    width: 100%; }
+    .footer-subscribe-social .block.newsletter .content {
+      width: 100%;
+      max-width: 512px;
+      margin: 0 auto; }
+      .footer-subscribe-social .block.newsletter .content .md-text {
+        margin-bottom: 20px;
+        text-align: center; }
+      .footer-subscribe-social .block.newsletter .content .news-letter-title {
+        font-size: 36px;
+        color: var(--color-primary);
+        font-family: FuturaBold !important;
+        margin-bottom: 0;
+        line-height: normal; }
+      .footer-subscribe-social .block.newsletter .content p {
+        font-size: 12px;
+        color: #595959;
+        line-height: normal; }
+    .footer-subscribe-social .block.newsletter .form.subscribe {
+      position: relative;
+      border: 1px solid var(--color-primary);
+      border-radius: 20px;
+      display: flex;
+      align-items: center; }
+      .footer-subscribe-social .block.newsletter .form.subscribe .field.newsletter {
+        max-width: 100%;
+        width: 100%;
+        margin: 0; }
+        .footer-subscribe-social .block.newsletter .form.subscribe .field.newsletter input {
+          border-radius: 20px;
+          border: 0;
+          width: 100%;
+          height: 40px;
+          padding: 3px 13px;
+          margin-right: 0; }
+          .footer-subscribe-social .block.newsletter .form.subscribe .field.newsletter input:hover, .footer-subscribe-social .block.newsletter .form.subscribe .field.newsletter input:focus {
+            outline: 0; }
+      .footer-subscribe-social .block.newsletter .form.subscribe .action.subscribe {
+        background-color: #7fba23;
+        color: #fff;
+        text-align: center;
+        width: 120px;
+        border-radius: 20px;
+        border-color: #7fba23;
+        height: 38px;
+        position: absolute;
+        right: 1px;
+        top: 1px;
+        font-size: 12px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 400;
+        line-height: normal;
+        margin: 0; }
+
+/*# sourceMappingURL=newsletter.css.map */

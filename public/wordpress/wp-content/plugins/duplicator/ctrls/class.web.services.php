@@ -1,6 +1,7 @@
 <?php
 
 use Duplicator\Libs\Snap\SnapUtil;
+use Duplicator\Views\AdminNotices;
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 
@@ -43,7 +44,7 @@ class DUP_Web_Services
             }
             DUP_Util::hasCapability('export', DUP_Util::SECURE_ISSUE_THROW);
 
-            /** Execute function * */
+            /* Execute function * */
             $error  = false;
             $result = array(
                 'data'    => array(),
@@ -55,11 +56,11 @@ class DUP_Web_Services
                 array('op' => '<', 'status' => DUP_PackageStatus::COMPLETE)
             ));
 
-            /** reset active package id * */
+            /* reset active package id * */
             DUP_Settings::Set('active_package_id', -1);
             DUP_Settings::Save();
 
-            /** Clean tmp folder * */
+            /* Clean tmp folder * */
             DUP_Package::not_active_files_tmp_cleanup();
 
             //throw new Exception('force error test');
@@ -68,10 +69,10 @@ class DUP_Web_Services
             $result['message'] = $e->getMessage();
         }
 
-        /** Intercept output * */
+        /* Intercept output * */
         $result['html'] = ob_get_clean();
 
-        /** check error and return json * */
+        /* check error and return json * */
         if ($error) {
             wp_send_json_error($result);
         } else {
@@ -83,44 +84,22 @@ class DUP_Web_Services
     {
         check_ajax_referer('duplicator_download_installer', 'nonce');
 
-        $isValid   = true;
-        $inputData = filter_input_array(INPUT_GET, array(
-            'id'   => array(
-                'filter'  => FILTER_VALIDATE_INT,
-                'flags'   => FILTER_REQUIRE_SCALAR,
-                'options' => array(
-                    'default' => false
-                )
-            ),
-            'hash' => array(
-                'filter'  => FILTER_UNSAFE_RAW,
-                'flags'   => FILTER_REQUIRE_SCALAR,
-                'options' => array(
-                    'default' => false
-                )
-            )
-        ));
-
-        $packageId = $inputData['id'];
-        $hash      = $inputData['hash'];
-
-        if (!$packageId || !$hash) {
-            $isValid = false;
-        }
+        $packageId = SnapUtil::sanitizeIntInput(INPUT_GET, 'id');
+        $hash      = SnapUtil::sanitizeTextInput(INPUT_GET, 'hash');
 
         try {
             DUP_Util::hasCapability('export', DUP_Util::SECURE_ISSUE_THROW);
 
-            if (!$isValid) {
-                throw new Exception(__("Invalid request"));
+            if (!$packageId || !$hash) {
+                throw new Exception(__('Invalid request.', 'duplicator'));
             }
 
             if (($package = DUP_Package::getByID($packageId)) == null) {
-                throw new Exception(__("Invalid request."));
+                throw new Exception(__('Invalid request.', 'duplicator'));
             }
 
             if ($hash !== $package->Hash) {
-                throw new Exception(__("Invalid request."));
+                throw new Exception(__('Invalid request.', 'duplicator'));
             }
 
             $fileName     = $package->getInstDownloadName();
@@ -134,7 +113,7 @@ class DUP_Web_Services
 
             // Process download
             if (!file_exists($filepath)) {
-                throw new Exception(__("INVALID REQUEST: File not found, please check the backup folder for file."));
+                throw new Exception(__('INVALID REQUEST: File not found, please check the backup folder for file.', 'duplicator'));
             }
 
             // Clean output buffer
@@ -183,9 +162,9 @@ class DUP_Web_Services
                 throw new Exception('Security issue');
             }
 
-            $notice_id = SnapUtil::filterInputRequest('notice_id', FILTER_UNSAFE_RAW);
+            $notice_id = SnapUtil::sanitizeTextInput(SnapUtil::INPUT_REQUEST, 'notice_id', false);
 
-            if (empty($notice_id)) {
+            if ($notice_id === false) {
                 throw new Exception(__('Invalid Request', 'duplicator'));
             }
 
@@ -210,20 +189,20 @@ class DUP_Web_Services
         try {
             DUP_Util::hasCapability('export', DUP_Util::SECURE_ISSUE_THROW);
 
-            $nonce = filter_input(INPUT_POST, 'nonce', FILTER_UNSAFE_RAW);
-            if (!wp_verify_nonce($nonce, 'duplicator_admin_notice_to_dismiss')) {
+            $nonce = SnapUtil::sanitizeTextInput(INPUT_POST, 'nonce', false);
+            if ($nonce === false || !wp_verify_nonce($nonce, 'duplicator_admin_notice_to_dismiss')) {
                 DUP_Log::trace('Security issue');
                 throw new Exception('Security issue');
             }
 
-            $noticeToDismiss = filter_input(INPUT_POST, 'notice', FILTER_UNSAFE_RAW);
+            $noticeToDismiss = SnapUtil::sanitizeTextInput(INPUT_POST, 'notice', false);
             switch ($noticeToDismiss) {
-                case DUP_UI_Notice::OPTION_KEY_ACTIVATE_PLUGINS_AFTER_INSTALL:
-                case DUP_UI_Notice::OPTION_KEY_NEW_NOTICE_TEMPLATE:
+                case AdminNotices::OPTION_KEY_ACTIVATE_PLUGINS_AFTER_INSTALL:
+                case AdminNotices::OPTION_KEY_NEW_NOTICE_TEMPLATE:
                     delete_option($noticeToDismiss);
                     break;
-                case DUP_UI_Notice::OPTION_KEY_IS_ENABLE_NOTICE_DISMISSED:
-                case DUP_UI_Notice::OPTION_KEY_IS_MU_NOTICE_DISMISSED:
+                case AdminNotices::OPTION_KEY_IS_ENABLE_NOTICE_DISMISSED:
+                case AdminNotices::OPTION_KEY_IS_MU_NOTICE_DISMISSED:
                     update_option($noticeToDismiss, true);
                     break;
                 default:

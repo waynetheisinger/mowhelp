@@ -1,0 +1,54 @@
+.panel, .box{
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    border-radius: 15px;
+    .panel-heading{
+        background-color: transparent;
+        margin: 0;
+        padding: 10px 15px;
+        .title{
+            font-size: 24px;
+        }
+    }
+    .tabs-content{
+        .panel-block{
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: list-item;
+            span{
+                margin: 5px 0;
+                margin-right: 10px;
+            }
+        }
+    }
+    .panel-block{
+        .button{
+            padding: 0 15px;
+            font-size: 14px;
+            height: auto;
+            border-radius: 15px;
+            display: flex;
+            color: var(--text-color-darken);
+            text-transform: capitalize;
+            span{
+                line-height: 1;
+            }
+        }
+    }
+}
+
+.panel.faq-card{
+    height: 445px;
+    display: flex;
+    flex-direction: column;
+    @media screen and (max-width: 1216px){        
+        height: 512px;
+    }
+    
+     @media screen and (max-width: 1080px){       
+          height: auto;  
+          margin: 0 15px;
+     }
+}

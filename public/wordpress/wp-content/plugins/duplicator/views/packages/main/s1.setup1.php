@@ -9,7 +9,7 @@ if (isset($_POST['action'])) {
     switch ($action) {
         case 'duplicator_package_active':
             $action_result   = DUP_Settings::DeleteWPOption($action);
-            $action_response = __('Package settings have been reset.', 'duplicator');
+            $action_response = __('Backup settings have been reset.', 'duplicator');
             break;
     }
 }
@@ -25,7 +25,7 @@ $ctrl_ui = new DUP_CTRL_UI();
 $ctrl_ui->setResponseType('PHP');
 $data = $ctrl_ui->GetViewStateList();
 
-$ui_css_storage     = (isset($data->payload['dup-pack-storage-panel']) && $data->payload['dup-pack-storage-panel']) ? 'display:block' : 'display:none';
+$ui_css_storage     = (isset($data->payload['dup-pack-storage-panel']) && !$data->payload['dup-pack-storage-panel']) ? 'display:none' : 'display:block';
 $ui_css_archive     = (isset($data->payload['dup-pack-archive-panel']) && $data->payload['dup-pack-archive-panel']) ? 'display:block' : 'display:none';
 $ui_css_installer   = (isset($data->payload['dup-pack-installer-panel']) && $data->payload['dup-pack-installer-panel']) ? 'display:block' : 'display:none';
 $dup_intaller_files = implode(", ", array_keys(DUP_Server::getInstallerFiles()));
@@ -108,7 +108,7 @@ SYSTEM REQUIREMENTS -->
                         <tr>
                             <td><?php printf("%s [%s]", esc_html__("PHP Version", 'duplicator'), phpversion()); ?></td>
                             <td><?php echo esc_html($dup_tests['PHP']['VERSION']); ?></td>
-                            <td><?php esc_html_e('PHP versions 5.2.9+ or higher is required.')?></td>
+                            <td><?php esc_html_e('PHP versions 5.2.9+ or higher is required.', 'duplicator')?></td>
                         </tr>
                         <?php if ($archive_build_mode == 'zip') : ?>
                             <tr>
@@ -116,10 +116,13 @@ SYSTEM REQUIREMENTS -->
                                 <td><?php echo esc_html($dup_tests['PHP']['ZIP']); ?></td>
                                 <td>
                                     <?php printf(
-                                        "%s <a href='admin.php?page=duplicator-settings&tab=package'>%s</a> %s",
-                                        esc_html__("ZipArchive extension is required or", 'duplicator'),
-                                        esc_html__("Switch to DupArchive", 'duplicator'),
-                                        esc_html__("to by-pass this requirement.", 'duplicator')
+                                        esc_html_x(
+                                            'ZipArchive extension is required or %1$sSwitch to DupArchive%2$s to by-pass this requirement.',
+                                            '1 and 2 are <a> tags',
+                                            'duplicator'
+                                        ),
+                                        '<a href="admin.php?page=duplicator-settings&tab=package">',
+                                        '</a>'
                                     );
                                     ?>
                                 </td>
@@ -128,7 +131,7 @@ SYSTEM REQUIREMENTS -->
                         <tr>
                             <td><?php esc_html_e('Safe Mode Off', 'duplicator'); ?></td>
                             <td><?php echo esc_html($dup_tests['PHP']['SAFE_MODE']); ?></td>
-                            <td><?php esc_html_e('Safe Mode should be set to Off in you php.ini file and is deprecated as of PHP 5.3.0.')?></td>
+                            <td><?php esc_html_e('Safe Mode should be set to Off in you php.ini file and is deprecated as of PHP 5.3.0.', 'duplicator')?></td>
                         </tr>                   
                         <tr>
                             <td><?php esc_html_e('Function', 'duplicator'); ?> <a href="http://php.net/manual/en/function.file-get-contents.php" target="_blank">file_get_contents</a></td>
@@ -205,7 +208,11 @@ SYSTEM REQUIREMENTS -->
                     </table>
                     <small>
                         <?php
-                        esc_html_e("MySQL version 5.0+ or better is required and the PHP MySQLi extension (note the trailing 'i') is also required.  Contact your server administrator and request that mysqli extension and MySQL Server 5.0+ be installed.", 'duplicator');
+                        esc_html_e(
+                            "MySQL version 5.0+ or better is required and the PHP MySQLi extension (note the trailing 'i') is also required.  " .
+                            "Contact your server administrator and request that mysqli extension and MySQL Server 5.0+ be installed.",
+                            'duplicator'
+                        );
                         echo "&nbsp;<i><a href='http://php.net/manual/en/mysqli.installation.php' target='_blank'>[" . esc_html__('more info', 'duplicator') . "]</a></i>";
                         ?>                                      
                     </small>
@@ -217,7 +224,8 @@ SYSTEM REQUIREMENTS -->
                         </tr>
                     </table>
                     <small>
-                        <?php esc_html_e("The function mysqli_real_escape_string is not working properly. Please consult host support and ask them to switch to a different PHP version or configuration."); ?>
+                        <?php esc_html_e("The function mysqli_real_escape_string is not working properly. Please consult host " .
+                            "support and ask them to switch to a different PHP version or configuration.", "duplicator"); ?>
                     </small>
                 </div>
             </div>
@@ -230,7 +238,7 @@ SYSTEM REQUIREMENTS -->
                 <div class="dup-sys-info dup-info-box">
                     <?php if ($dup_tests['RES']['INSTALL'] == 'Pass') : ?>
                         <?php
-                        esc_html_e("None of the reserved files where found from a previous install.  This means you are clear to create a new package.", 'duplicator');
+                        esc_html_e("None of the reserved files where found from a previous install.  This means you are clear to create a new Backup.", 'duplicator');
                         echo "  [" . esc_html($dup_intaller_files) . "]";
                         ?>
                         <?php
@@ -242,7 +250,7 @@ SYSTEM REQUIREMENTS -->
                             <?php echo esc_html(duplicator_get_abs_path()); ?><br/>
                             <?php esc_html_e("A reserved file(s) was found in the WordPress root directory. Reserved file names include [{$dup_intaller_files}]. " .
                                 " To archive your data correctly please remove any of these files from your WordPress root directory. " .
-                                " Then try creating your package again.", 'duplicator'); ?>
+                                " Then try creating your Backup again.", 'duplicator'); ?>
                             <br/><input type='submit' class='button button-small' value='<?php esc_attr_e('Remove Files Now', 'duplicator') ?>' style='font-size:10px; margin-top:5px;' />
                         </form>
                     <?php endif; ?>

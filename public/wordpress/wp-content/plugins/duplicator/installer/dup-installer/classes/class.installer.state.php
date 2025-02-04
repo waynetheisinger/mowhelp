@@ -25,6 +25,13 @@ class DUPX_InstallerState
     const INSTALL_SINGLE_SITE_ON_SUBFOLDER = 5;
     const INSTALL_RBACKUP_SINGLE_SITE      = 8;
 
+    const LOGIC_MODE_IMPORT         = 'IMPORT';
+    const LOGIC_MODE_RECOVERY       = 'RECOVERY';
+    const LOGIC_MODE_CLASSIC        = 'CLASSIC';
+    const LOGIC_MODE_OVERWRITE      = 'OVERWRITE';
+    const LOGIC_MODE_BRIDGE         = 'BRIDGE';
+    const LOGIC_MODE_RESTORE_BACKUP = 'RESTORE_BACKUP';
+
     /**
      * min versions
      */
@@ -80,6 +87,7 @@ class DUPX_InstallerState
      *
      * @param bool $onlyIfUnknown // check se state only if is unknow state
      * @param bool $saveParams // if true update params
+     *
      * @return boolean
      */
     public function checkState($onlyIfUnknown = true, $saveParams = true)
@@ -108,8 +116,8 @@ class DUPX_InstallerState
                 if (!self::isImportFromBackendMode()) {
                     //Add additional overwrite data for standard installs
                     $overwriteData['adminUsers'] = $this->getAdminUsersOnOverwriteDatabase($overwriteData);
-                    $overwriteData['dupVersion'] = $this->getDuplicatorVersionOverwrite($overwriteData);
                     $overwriteData['wpVersion']  = $this->getWordPressVersionOverwrite();
+                    $this->updateOverwriteDataFromDb($overwriteData);
                 }
             }
         } catch (Exception $e) {
@@ -152,8 +160,8 @@ class DUPX_InstallerState
     /**
      *
      * @param int $type
+     *
      * @return string
-     * @throws Exception
      */
     public static function installTypeToString($type = null)
     {
@@ -176,7 +184,7 @@ class DUPX_InstallerState
         }
     }
 
-    protected static function overwriteDataDefault()
+    public static function overwriteDataDefault()
     {
         return array(
             'dupVersion'       => '0',
@@ -185,11 +193,12 @@ class DUPX_InstallerState
             'dbname'           => '',
             'dbuser'           => '',
             'dbpass'           => '',
-            'table_prefix'      => '',
+            'table_prefix'     => '',
             'restUrl'          => '',
             'restNonce'        => '',
             'restAuthUser'     => '',
             'restAuthPassword' => '',
+            'ustatIdentifier'  => '',
             'isMultisite'      => false,
             'subdomain'        => false,
             'subsites'         => array(),
@@ -316,6 +325,7 @@ class DUPX_InstallerState
     /**
      *
      * @param int|array $type
+     *
      * @return bool
      */
     public static function instTypeAvaiable($type)
@@ -330,6 +340,7 @@ class DUPX_InstallerState
      * this function in case of an error returns an empty array but never generates exceptions
      *
      * @param string $overwriteData
+     *
      * @return array
      */
     protected function getAdminUsersOnOverwriteDatabase($overwriteData)
@@ -399,44 +410,50 @@ class DUPX_InstallerState
     /**
      * Returns the Duplicator Pro version if it exists, otherwise '0'
      *
-     * @param $overwriteData
-     * @return string
+     * @param array<string, mixed> $overwriteData Overwrite data
+     *
+     * @return bool True on success, false on failure
      */
-    protected function getDuplicatorVersionOverwrite($overwriteData)
+    protected function updateOverwriteDataFromDb(&$overwriteData)
     {
-        $duplicatorProVersion = '0';
         try {
+            $dbFuncs = null;
             $dbFuncs = DUPX_DB_Functions::getInstance();
 
             if (!$dbFuncs->dbConnection($overwriteData)) {
-                Log::info('GET DUPLICATOR VERSION ON CURRENT DATABASE FAILED. Can\'t connect');
-                return $duplicatorProVersion;
+                throw new Exception('GET DUPLICATOR VERSION ON CURRENT DATABASE FAILED. Can\'t connect');
             }
 
             $optionsTable = DUPX_DB_Functions::getOptionsTableName($overwriteData['table_prefix']);
 
             if (!$dbFuncs->tablesExist($optionsTable)) {
-                Log::info("GET DUPLICATOR VERSION ON CURRENT DATABASE FAILED. Options tables doesn't exist.\n");
-                $dbFuncs->closeDbConnection();
-                return $duplicatorProVersion;
+                throw new Exception("GET DUPLICATOR VERSION ON CURRENT DATABASE FAILED. Options tables doesn't exist.\n");
             }
 
-            if (($duplicatorProVersion = $dbFuncs->getDuplicatorVersion($overwriteData['table_prefix'])) === false) {
-                Log::info('GET DUPLICATOR VERSION ON CURRENT DATABASE FAILED. OVERWRITE VERSION NOT FOUND');
-                $dbFuncs->closeDbConnection();
-                return '0';
-            }
+            $duplicatorProVersion = $dbFuncs->getDuplicatorVersion($overwriteData['table_prefix']);
 
-            $dbFuncs->closeDbConnection();
+            $overwriteData['dupVersion']      = (empty($duplicatorProVersion) ? '0' : $duplicatorProVersion);
+            $overwriteData['ustatIdentifier'] = $dbFuncs->getUstatIdentifier($overwriteData['table_prefix']);
         } catch (Exception $e) {
+            if ($dbFuncs instanceof DUPX_DB_Functions) {
+                $dbFuncs->closeDbConnection();
+            }
             Log::logException($e, Log::LV_DEFAULT, 'GET DUPLICATOR VERSION EXECPTION BUT CONTINUE');
+            return false;
         } catch (Error $e) {
+            if ($dbFuncs instanceof DUPX_DB_Functions) {
+                $dbFuncs->closeDbConnection();
+            }
             Log::logException($e, Log::LV_DEFAULT, 'GET DUPLICATOR VERSION ERROR BUT CONTINUE');
+            return false;
         }
 
-        return $duplicatorProVersion;
-    }
+        if ($dbFuncs instanceof DUPX_DB_Functions) {
+            $dbFuncs->closeDbConnection();
+        }
 
+        return true;
+    }
 
     /**
      * getHtmlModeHeader
@@ -476,6 +493,7 @@ class DUPX_InstallerState
      * reset current mode
      *
      * @param boolean $saveParams
+     *
      * @return boolean
      */
     public function resetState($saveParams = true)
@@ -493,7 +511,6 @@ class DUPX_InstallerState
      * save current installer state
      *
      * @return bool
-     * @throws Exception if fail
      */
     public function save()
     {
@@ -541,8 +558,9 @@ class DUPX_InstallerState
     /**
      * isSameLocationOfArtiche
      *
-     * @param  string $urlNew
-     * @param  string $pathNew
+     * @param string $urlNew
+     * @param string $pathNew
+     *
      * @return bool
      */
     public static function urlAndPathAreSameOfArchive($urlNew, $pathNew)
@@ -572,9 +590,15 @@ class DUPX_InstallerState
     {
         $sec           = DUPX_Security::getInstance();
         $paramsManager = PrmMng::getInstance();
+        $ac            = DUPX_ArchiveConfig::getInstance();
+        $overwriteData = $paramsManager->getValue(PrmMng::PARAM_OVERWRITE_SITE_DATA);
 
         return array(
+            'plugin'              => 'dup-lite',
+            'installerVersion'    => DUPX_VERSION,
             'installType'         => $paramsManager->getValue(PrmMng::PARAM_INST_TYPE),
+            'logicModes'          => self::getLogicModes(),
+            'template'            => PrmMng::getInstance()->getValue(PrmMng::PARAM_TEMPLATE),
             'restoreBackupMode'   => self::isRestoreBackup(),
             'recoveryMode'        => false,
             'archivePath'         => $sec->getArchivePath(),
@@ -585,7 +609,17 @@ class DUPX_InstallerState
             'dupInstallerPath'    => DUPX_INIT,
             'origFileFolderPath'  => DUPX_Orig_File_Manager::getInstance()->getMainFolder(),
             'safeMode'            => $paramsManager->getValue(PrmMng::PARAM_SAFE_MODE),
-            'cleanInstallerFiles' => $paramsManager->getValue(PrmMng::PARAM_AUTO_CLEAN_INSTALLER_FILES)
+            'cleanInstallerFiles' => $paramsManager->getValue(PrmMng::PARAM_AUTO_CLEAN_INSTALLER_FILES),
+            'licenseType'         => $ac->license_type,
+            'phpVersion'          => $ac->version_php,
+            'archiveType'         => $ac->isZipArchive() ? 'zip' : 'dup',
+            'siteSize'            => $ac->fileInfo->size,
+            'siteNumFiles'        => ($ac->fileInfo->dirCount + $ac->fileInfo->fileCount),
+            'siteDbSize'          => $ac->dbInfo->tablesSizeOnDisk,
+            'siteDBNumTables'     => $ac->dbInfo->tablesFinalCount,
+            'components'          => $ac->components,
+            'ustatIdentifier'     => $overwriteData['ustatIdentifier'],
+            'time'                => time()
         );
     }
 
@@ -595,9 +629,14 @@ class DUPX_InstallerState
      */
     public static function getAdminLogin()
     {
-        $paramsManager = PrmMng::getInstance();
-        $adminUrl      = rtrim($paramsManager->getValue(PrmMng::PARAM_SITE_URL), "/");
-        return $adminUrl . '/wp-login.php';
+        $paramsManager  = PrmMng::getInstance();
+        $archiveConfig  = \DUPX_ArchiveConfig::getInstance();
+        $adminUrl       = rtrim($paramsManager->getValue(PrmMng::PARAM_SITE_URL), "/");
+        $sourceAdminUrl = rtrim($archiveConfig->getRealValue("siteUrl"), "/");
+        $sourceLoginUrl = $archiveConfig->getRealValue("loginUrl");
+        $relLoginUrl    = substr($sourceLoginUrl, strlen($sourceAdminUrl));
+        $loginUrl       = $adminUrl . $relLoginUrl;
+        return $loginUrl;
     }
 
     /**
@@ -610,8 +649,9 @@ class DUPX_InstallerState
     }
 
     /**
-     * @param  int|array $type  list of types to check
-     * @param  int $typeToCheck if is null get param install time or check this
+     * @param int|array $type  list of types to check
+     * @param int $typeToCheck if is null get param install time or check this
+     *
      * @return bool
      */
     public static function isInstType($type, $typeToCheck = null)
@@ -622,5 +662,28 @@ class DUPX_InstallerState
         } else {
             return $currentType === $type;
         }
+    }
+
+    /**
+     * Get install logic modes
+     *
+     * @return string[]
+     */
+    public static function getLogicModes()
+    {
+        $modes = array();
+        if (self::isImportFromBackendMode()) {
+            $modes[] = self::LOGIC_MODE_IMPORT;
+        }
+        if (self::isClassicInstall()) {
+            $modes[] = self::LOGIC_MODE_CLASSIC;
+        }
+        if (self::isOverwrite()) {
+            $modes[] = self::LOGIC_MODE_OVERWRITE;
+        }
+        if (self::isRestoreBackup()) {
+            $modes[] = self::LOGIC_MODE_RESTORE_BACKUP;
+        }
+        return $modes;
     }
 }

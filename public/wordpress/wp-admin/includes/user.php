@@ -25,7 +25,7 @@ function add_user() {
  * @since 2.0.0
  *
  * @param int $user_id Optional. User ID.
- * @return int|WP_Error User ID of the updated user.
+ * @return int|WP_Error User ID of the updated user or WP_Error on failure.
  */
 function edit_user( $user_id = 0 ) {
 	$wp_roles = wp_roles();
@@ -174,7 +174,7 @@ function edit_user( $user_id = 0 ) {
 
 	// Checking the password has been typed twice the same.
 	if ( ( $update || ! empty( $pass1 ) ) && $pass1 != $pass2 ) {
-		$errors->add( 'pass', __( '<strong>Error</strong>: Passwords don&#8217;t match. Please enter the same password in both password fields.' ), array( 'form-field' => 'pass1' ) );
+		$errors->add( 'pass', __( '<strong>Error</strong>: Passwords do not match. Please enter the same password in both password fields.' ), array( 'form-field' => 'pass1' ) );
 	}
 
 	if ( ! empty( $pass1 ) ) {
@@ -200,7 +200,7 @@ function edit_user( $user_id = 0 ) {
 	if ( empty( $user->user_email ) ) {
 		$errors->add( 'empty_email', __( '<strong>Error</strong>: Please enter an email address.' ), array( 'form-field' => 'email' ) );
 	} elseif ( ! is_email( $user->user_email ) ) {
-		$errors->add( 'invalid_email', __( '<strong>Error</strong>: The email address isn&#8217;t correct.' ), array( 'form-field' => 'email' ) );
+		$errors->add( 'invalid_email', __( '<strong>Error</strong>: The email address is not correct.' ), array( 'form-field' => 'email' ) );
 	} else {
 		$owner_id = email_exists( $user->user_email );
 		if ( $owner_id && ( ! $update || ( $owner_id != $user->ID ) ) ) {
@@ -234,9 +234,9 @@ function edit_user( $user_id = 0 ) {
 		 *
 		 * @since 4.4.0
 		 *
-		 * @param int    $user_id ID of the newly created user.
-		 * @param string $notify  Type of notification that should happen. See wp_send_new_user_notifications()
-		 *                        for more information on possible values.
+		 * @param int|WP_Error $user_id ID of the newly created user or WP_Error on failure.
+		 * @param string       $notify  Type of notification that should happen. See
+		 *                              wp_send_new_user_notifications() for more information.
 		 */
 		do_action( 'edit_user_created_user', $user_id, $notify );
 	}
@@ -280,7 +280,7 @@ function get_editable_roles() {
  * @since 2.0.5
  *
  * @param int $user_id User ID.
- * @return WP_User|bool WP_User object on success, false on failure.
+ * @return WP_User|false WP_User object on success, false on failure.
  */
 function get_user_to_edit( $user_id ) {
 	$user = get_userdata( $user_id );
@@ -482,7 +482,7 @@ function default_password_nag_handler( $errors = false ) {
 		|| isset( $_GET['default_password_nag'] ) && '0' == $_GET['default_password_nag']
 	) {
 		delete_user_setting( 'default_password_nag' );
-		update_user_option( $user_ID, 'default_password_nag', false, true );
+		update_user_meta( $user_ID, 'default_password_nag', false );
 	}
 }
 
@@ -503,17 +503,18 @@ function default_password_nag_edit_user( $user_ID, $old_data ) {
 	// Remove the nag if the password has been changed.
 	if ( $new_data->user_pass != $old_data->user_pass ) {
 		delete_user_setting( 'default_password_nag' );
-		update_user_option( $user_ID, 'default_password_nag', false, true );
+		update_user_meta( $user_ID, 'default_password_nag', false );
 	}
 }
 
 /**
  * @since 2.8.0
  *
- * @global string $pagenow
+ * @global string $pagenow The filename of the current screen.
  */
 function default_password_nag() {
 	global $pagenow;
+
 	// Short-circuit it.
 	if ( 'profile.php' === $pagenow || ! get_user_option( 'default_password_nag' ) ) {
 		return;
@@ -536,7 +537,7 @@ function default_password_nag() {
 function delete_users_add_js() {
 	?>
 <script>
-jQuery(document).ready( function($) {
+jQuery( function($) {
 	var submit = $('#submit').prop('disabled', true);
 	$('input[name="delete_option"]').one('change', function() {
 		submit.prop('disabled', false);
@@ -544,7 +545,7 @@ jQuery(document).ready( function($) {
 	$('#reassign_user').focus( function() {
 		$('#delete_option1').prop('checked', true).trigger('change');
 	});
-});
+} );
 </script>
 	<?php
 }
@@ -577,6 +578,12 @@ function admin_created_user_email( $text ) {
 	$roles = get_editable_roles();
 	$role  = $roles[ $_REQUEST['role'] ];
 
+	if ( '' !== get_bloginfo( 'name' ) ) {
+		$site_title = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+	} else {
+		$site_title = parse_url( home_url(), PHP_URL_HOST );
+	}
+
 	return sprintf(
 		/* translators: 1: Site title, 2: Site URL, 3: User role. */
 		__(
@@ -589,7 +596,7 @@ this email. This invitation will expire in a few days.
 Please click the following link to activate your user account:
 %%s'
 		),
-		wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
+		$site_title,
 		home_url(),
 		wp_specialchars_decode( translate_user_role( $role['name'] ) )
 	);
@@ -599,14 +606,16 @@ Please click the following link to activate your user account:
  * Checks if the Authorize Application Password request is valid.
  *
  * @since 5.6.0
+ * @since 6.2.0 Allow insecure HTTP connections for the local environment.
+ * @since 6.3.2 Validates the success and reject URLs to prevent javascript pseudo protocol being executed.
  *
  * @param array   $request {
  *     The array of request data. All arguments are optional and may be empty.
  *
  *     @type string $app_name    The suggested name of the application.
- *     @type string $app_id      A uuid provided by the application to uniquely identify it.
- *     @type string $success_url The url the user will be redirected to after approving the application.
- *     @type string $reject_url  The url the user will be redirected to after rejecting the application.
+ *     @type string $app_id      A UUID provided by the application to uniquely identify it.
+ *     @type string $success_url The URL the user will be redirected to after approving the application.
+ *     @type string $reject_url  The URL the user will be redirected to after rejecting the application.
  * }
  * @param WP_User $user The user authorizing the application.
  * @return true|WP_Error True if the request is valid, a WP_Error object contains errors if not.
@@ -614,24 +623,22 @@ Please click the following link to activate your user account:
 function wp_is_authorize_application_password_request_valid( $request, $user ) {
 	$error = new WP_Error();
 
-	if ( ! empty( $request['success_url'] ) ) {
-		$scheme = wp_parse_url( $request['success_url'], PHP_URL_SCHEME );
-
-		if ( 'http' === $scheme ) {
+	if ( isset( $request['success_url'] ) ) {
+		$validated_success_url = wp_is_authorize_application_redirect_url_valid( $request['success_url'] );
+		if ( is_wp_error( $validated_success_url ) ) {
 			$error->add(
-				'invalid_redirect_scheme',
-				__( 'The success url must be served over a secure connection.' )
+				$validated_success_url->get_error_code(),
+				$validated_success_url->get_error_message()
 			);
 		}
 	}
 
-	if ( ! empty( $request['reject_url'] ) ) {
-		$scheme = wp_parse_url( $request['reject_url'], PHP_URL_SCHEME );
-
-		if ( 'http' === $scheme ) {
+	if ( isset( $request['reject_url'] ) ) {
+		$validated_reject_url = wp_is_authorize_application_redirect_url_valid( $request['reject_url'] );
+		if ( is_wp_error( $validated_reject_url ) ) {
 			$error->add(
-				'invalid_redirect_scheme',
-				__( 'The rejection url must be served over a secure connection.' )
+				$validated_reject_url->get_error_code(),
+				$validated_reject_url->get_error_message()
 			);
 		}
 	}
@@ -639,7 +646,7 @@ function wp_is_authorize_application_password_request_valid( $request, $user ) {
 	if ( ! empty( $request['app_id'] ) && ! wp_is_uuid( $request['app_id'] ) ) {
 		$error->add(
 			'invalid_app_id',
-			__( 'The app id must be a uuid.' )
+			__( 'The application ID must be a UUID.' )
 		);
 	}
 
@@ -656,6 +663,62 @@ function wp_is_authorize_application_password_request_valid( $request, $user ) {
 
 	if ( $error->has_errors() ) {
 		return $error;
+	}
+
+	return true;
+}
+
+/**
+ * Validates the redirect URL protocol scheme. The protocol can be anything except http and javascript.
+ *
+ * @since 6.3.2
+ *
+ * @param string $url - The redirect URL to be validated.
+ *
+ * @return true|WP_Error True if the redirect URL is valid, a WP_Error object otherwise.
+ */
+function wp_is_authorize_application_redirect_url_valid( $url ) {
+	$bad_protocols = array( 'javascript', 'data' );
+	if ( empty( $url ) ) {
+		return true;
+	}
+
+	// Based on https://www.rfc-editor.org/rfc/rfc2396#section-3.1
+	$valid_scheme_regex = '/^[a-zA-Z][a-zA-Z0-9+.-]*:/';
+	if ( ! preg_match( $valid_scheme_regex, $url ) ) {
+		return new WP_Error(
+			'invalid_redirect_url_format',
+			__( 'Invalid URL format.' )
+		);
+	}
+
+	/**
+	 * Filters the list of invalid protocols used in applications redirect URLs.
+	 *
+	 * @since 6.3.2
+	 *
+	 * @param string[]  $bad_protocols Array of invalid protocols.
+	 * @param string    $url The redirect URL to be validated.
+	 */
+	$invalid_protocols = array_map( 'strtolower', apply_filters( 'wp_authorize_application_redirect_url_invalid_protocols', $bad_protocols, $url ) );
+
+	$scheme   = wp_parse_url( $url, PHP_URL_SCHEME );
+	$host     = wp_parse_url( $url, PHP_URL_HOST );
+	$is_local = 'local' === wp_get_environment_type();
+
+	// validates if the proper URI format is applied to the $url
+	if ( empty( $host ) || empty( $scheme ) || in_array( strtolower( $scheme ), $invalid_protocols, true ) ) {
+		return new WP_Error(
+			'invalid_redirect_url_format',
+			__( 'Invalid URL format.' )
+		);
+	}
+
+	if ( 'http' === $scheme && ! $is_local ) {
+		return new WP_Error(
+			'invalid_redirect_scheme',
+			__( 'The URL must be served over a secure connection.' )
+		);
 	}
 
 	return true;

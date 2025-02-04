@@ -1,0 +1,41 @@
+.faq-list{
+    .question{
+        &:hover{
+            background-color: #f5f5f5;
+        }
+        span{
+            &.icon-chevron-up  {
+                transform: rotate(180deg);
+            }
+        }
+        &.close-modle{
+             span{
+                  &.icon-chevron-up  {
+                       transform: rotate(90deg);   
+                  }
+             }
+        }
+    }
+    ol{
+        margin-left: 20px;
+    }
+	
+.back-home {
+	&:before {
+		content: '';
+		display: block;
+		border-top: 2px solid;
+		border-left: 2px solid;
+		width: 10px;
+		height: 10px;
+		transform: rotate(-45deg);
+		position: absolute;
+		bottom: 5px;
+		left: -12px;
+	}
+	position: relative;
+	text-decoration: underline;
+	display: inline-block;
+	margin-bottom: 15px;
+}
+}

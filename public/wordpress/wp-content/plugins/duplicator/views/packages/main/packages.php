@@ -1,6 +1,11 @@
 <?php
 
+use Duplicator\Core\Controllers\ControllersManager;
 use Duplicator\Libs\Snap\SnapJson;
+use Duplicator\Utils\LinkManager;
+use Duplicator\Utils\Upsell;
+use Duplicator\Views\ViewHelper;
+use Duplicator\Core\Notifications\Notifications;
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 /* @var $Package DUP_Package */
@@ -10,7 +15,7 @@ DUP_Package::purge_incomplete_package();
 
 $totalElements          = DUP_Package::count_by_status();
 $completeCount          = DUP_Package::count_by_status(array(array('op' => '>=', 'status' => DUP_PackageStatus::COMPLETE))); // total packages completed
-$active_package_present = DUP_Package::is_active_package_present();
+$active_package_present = DUP_Package::isPackageRunning();
 $is_mu                  = is_multisite();
 
 $package_running = false;
@@ -19,10 +24,10 @@ $packageTablerowCount = 0;
 
 if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MODE_SIMPLE) {
     $packageExeNameModeMsg = __("When clicking the Installer download button, the 'Save as' dialog is currently defaulting the name to 'installer.php'. "
-        . "To improve the security and get more information, go to: Settings > Packages Tab > Installer > Name option or click on the gear icon at the top of this page.", 'duplicator');
+        . "To improve the security and get more information, go to: Settings > Backups Tab > Installer > Name option or click on the gear icon at the top of this page.", 'duplicator');
 } else {
     $packageExeNameModeMsg = __("When clicking the Installer download button, the 'Save as' dialog is defaulting the name to '[name]_[hash]_[time]_installer.php'. "
-        . "This is the secure and recommended option.  For more information, go to: Settings > Packages Tab > Installer > Name or click on the gear icon at the top of this page.<br/><br/>"
+        . "This is the secure and recommended option.  For more information, go to: Settings > Backups Tab > Installer > Name or click on the gear icon at the top of this page.<br/><br/>"
         . "To quickly copy the hashed installer name, to your clipboard use the copy icon link or click the installer name and manually copy the selected text.", 'duplicator');
 }
 ?>
@@ -77,7 +82,7 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
     div.sc-footer-left {color:maroon; font-size:11px; font-style: italic; float:left}
     div.sc-footer-right {font-style: italic; float:right; font-size:12px}
 </style>
-
+<?php do_action(Notifications::DUPLICATOR_BEFORE_PACKAGES_HOOK); ?>
 <form id="form-duplicator" method="post">
 
     <!-- ====================
@@ -89,7 +94,7 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                     <option value="-1" selected="selected">
                         <?php esc_html_e("Bulk Actions", 'duplicator') ?>
                     </option>
-                    <option value="delete" title="<?php esc_attr_e("Delete selected package(s)", 'duplicator') ?>">
+                    <option value="delete" title="<?php esc_attr_e("Delete selected backup(s)", 'duplicator') ?>">
                         <?php esc_html_e("Delete", 'duplicator') ?>
                     </option>
                 </select>
@@ -102,14 +107,26 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                 <a href="javascript:void(0)" class="button"  title="<?php esc_attr_e("Get Help", 'duplicator') ?>" onclick="Duplicator.Pack.showHelp()">
                     <i class="fa fa-question-circle"></i>
                 </a>
-                <a href="admin.php?page=duplicator-settings&tab=package" class="button" title="<?php esc_attr_e("Settings", 'duplicator') ?>">
+                <a 
+                    href="<?php echo esc_url(ControllersManager::getMenuLink(ControllersManager::SETTINGS_SUBMENU_SLUG, 'package')); ?>" 
+                    class="button" 
+                    title="<?php esc_attr_e("Backup Settings", 'duplicator'); ?>"
+                >
                     <i class="fas fa-sliders-h"></i>
                 </a>
-                <a href="admin.php?page=duplicator-tools&tab=templates" class="button dup-btn-disabled" title="<?php esc_html_e("Templates", 'duplicator'); ?>">
+                <a 
+                    href="<?php echo esc_url(ControllersManager::getMenuLink(ControllersManager::TOOLS_SUBMENU_SLUG, 'templates')); ?>" 
+                    class="button dup-btn-disabled" 
+                    title="<?php esc_attr_e("Templates", 'duplicator'); ?>"
+                >
                     <i class="far fa-clone"></i>
                 </a>
                 <span class="btn-separator"></span>
-                <a href="admin.php?page=duplicator-settings&tab=import" class="button dup-btn-disabled" title="<?php esc_html_e("Import", 'duplicator'); ?>">
+                <a 
+                    href="<?php echo esc_url(ControllersManager::getMenuLink(ControllersManager::IMPORT_SUBMENU_SLUG)); ?>" 
+                    class="button dup-btn-disabled" 
+                    title="<?php esc_attr_e("Import", 'duplicator'); ?>"
+                >
                     <i class="fas fa-arrow-alt-circle-down"></i>
                 </a>
                 <a href="admin.php?page=duplicator-tools&tab=recovery" class="button dup-btn-disabled" title="<?php esc_html_e("Recovery", 'duplicator'); ?>">
@@ -118,12 +135,11 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
             </td>
             <td>                        
                 <?php
-                $package_url       = admin_url('admin.php?page=duplicator&tab=new1');
-                $package_nonce_url = wp_nonce_url($package_url, 'new1-package');
+                $package_url = ControllersManager::getPackageBuildUrl();
                 ?>
                 <a id="dup-create-new" 
                    onclick="return Duplicator.Pack.CreateNew(this);"
-                   href="<?php echo $package_nonce_url; ?>"
+                   href="<?php echo esc_url($package_url); ?>"
                    class="button <?php echo ($active_package_present ? 'disabled' : ''); ?>">
                        <?php esc_html_e("Create New", 'duplicator'); ?>
                 </a>
@@ -141,13 +157,11 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                     <td>
                         <div id='dup-list-alert-nodata'>
                             <i class="fa fa-archive fa-sm"></i> 
-                            <?php esc_html_e("No Packages Found", 'duplicator'); ?><br/>
-                            <i><?php esc_html_e("Click 'Create New' to Archive Site", 'duplicator'); ?></i><br/>
+                            <?php esc_html_e("No Backups Found", 'duplicator'); ?><br/>
+                            <i><?php esc_html_e("Click 'Create New' to Backup Site", 'duplicator'); ?></i><br/>
                             <div class="dup-quick-start" <?php echo ($is_mu) ? 'style="display:none"' : ''; ?>>
                                 <b><?php esc_html_e("New to Duplicator?", 'duplicator'); ?></b><br/>
-                                <a 
-                                    href="https://snapcreek.com/duplicator/docs/quick-start/?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=packages_empty1&utm_campaign=quick_start" 
-                                    target="_blank">
+                                <a href="<?php echo esc_url(LinkManager::getCategoryUrl(LinkManager::QUICK_START_CAT, 'package_list_no_package', 'Quick Start')); ?>" target="_blank">
                                     <?php esc_html_e("Visit the 'Quick Start' guide!", 'duplicator'); ?>
                                 </a>
                             </div>
@@ -157,7 +171,7 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                                     esc_html_e('Duplicator Lite does not officially support WordPress multisite.', 'duplicator');
                                     echo "<br/>";
                                     esc_html_e('We strongly recommend upgrading to ', 'duplicator');
-                                    echo "&nbsp;<i><a href='https://snapcreek.com/duplicator/?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=free_is_mu_warn1&utm_campaign=duplicator_pro' target='_blank'>[" . esc_html__('Duplicator Pro', 'duplicator') . "]</a></i>.";
+                                    echo "&nbsp;<i><a href='" . esc_url(Upsell::getCampaignUrl('packages-list', "Mutlisite no packages")) . "' target='_blank'>[" . esc_html__('Duplicator Pro', 'duplicator') . "]</a></i>.";
                                     echo '</div>';
                             }
                             ?>
@@ -175,7 +189,7 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
             <thead>
                 <tr>
                     <th style="width: 30px;">
-                        <input type="checkbox" id="dup-bulk-action-all"  title="<?php esc_attr_e("Select all packages", 'duplicator') ?>" style="margin-left:12px" onclick="Duplicator.Pack.SetDeleteAll()" />
+                        <input type="checkbox" id="dup-bulk-action-all"  title="<?php esc_attr_e("Select all Backups", 'duplicator') ?>" style="margin-left:12px" onclick="Duplicator.Pack.SetDeleteAll()" />
                     </th>
                     <th style="width: 100px;" ><?php esc_html_e("Created", 'duplicator') ?></th>
                     <th style="width: 70px;"><?php esc_html_e("Size", 'duplicator') ?></th>
@@ -188,7 +202,7 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                         </i>
                     </th>
                     <th style="text-align:center; width: 200px;">
-                        <?php esc_html_e("Package", 'duplicator') ?>
+                        <?php esc_html_e("Backup", 'duplicator') ?>
                     </th>
                 </tr>
             </thead>
@@ -196,11 +210,11 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                 <td colspan="6">
                     <div id='dup-list-alert-nodata'>
                         <i class="fa fa-archive fa-sm"></i>
-                        <?php esc_html_e("No Packages Found", 'duplicator'); ?><br/>
-                        <i><?php esc_html_e("Click 'Create New' to Archive Site", 'duplicator'); ?></i><br/>
+                        <?php esc_html_e("No Backups Found", 'duplicator'); ?><br/>
+                        <i><?php esc_html_e("Click 'Create New' to Backup Site", 'duplicator'); ?></i><br/>
                         <div class="dup-quick-start">
                             <?php esc_html_e("New to Duplicator?", 'duplicator'); ?><br/>
-                            <a href="https://snapcreek.com/duplicator/docs/quick-start/?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=packages_empty2&utm_campaign=quick_start" target="_blank">
+                            <a href="<?php echo esc_url(LinkManager::getCategoryUrl(LinkManager::QUICK_START_CAT, 'package_list_processing', 'Quick Start')); ?>" target="_blank">
                                 <?php esc_html_e("Visit the 'Quick Start' guide!", 'duplicator'); ?>
                             </a>
                         </div>
@@ -235,18 +249,18 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                             <?php
                             echo DUP_Package::getCreatedDateFormat($Package->Created, DUP_Settings::get_create_date_format());
                             echo ' ' . ($pack_build_mode ?
-                                "<sup title='" . __('Archive created as zip file', 'duplicator') . "'>zip</sup>" :
-                                "<sup title='" . __('Archive created as daf file', 'duplicator') . "'>daf</sup>");
+                                "<sup title='" . __('Backup created as zip file', 'duplicator') . "'>zip</sup>" :
+                                "<sup title='" . __('Backup created as daf file', 'duplicator') . "'>daf</sup>");
                             ?>
                         </td>
                         <td class="pack-size"><?php echo DUP_Util::byteSize($pack_archive_size); ?></td>
                         <td class='pack-name'>
                             <?php echo ($pack_dbonly) ? "{$pack_name} <sup title='" . esc_attr(__('Database Only', 'duplicator')) . "'>DB</sup>" : esc_html($pack_name); ?><br/>
                             <span class="building-info" >
-                                <i class="fa fa-cog fa-sm fa-spin"></i> <b>Building Package</b> <span class="perc"><?php echo $pack_perc; ?></span>%
+                                <i class="fa fa-cog fa-sm fa-spin"></i> <b><?php esc_html_e('Building Backup', 'duplicator') ?></b> <span class="perc"><?php echo $pack_perc; ?></span>%
                                 &nbsp; <i class="fas fa-question-circle fa-sm" style="color:#2C8021"
-                                          data-tooltip-title="<?php esc_attr_e("Package Build Running", 'duplicator'); ?>"
-                                          data-tooltip="<?php esc_attr_e('To stop or reset this package build goto Settings > Advanced > Reset Packages', 'duplicator'); ?>"></i>
+                                          data-tooltip-title="<?php esc_attr_e("Backup Build Running", 'duplicator'); ?>"
+                                          data-tooltip="<?php esc_attr_e('To stop or reset this Backup build goto Settings > Advanced > Reset Backups', 'duplicator'); ?>"></i>
                             </span>
                         </td>
                         <td class="inst-name">
@@ -280,9 +294,9 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                                 id="<?php echo esc_attr("{$uniqueid}_archive.zip"); ?>" 
                                 class="button no-select"
                                 onclick="Duplicator.Pack.DownloadFile(<?php echo SnapJson::jsonEncodeEscAttr($Package->getPackageFileDownloadInfo(DUP_PackageFileType::Archive)); ?>); return false;">
-                                <i class="far fa-file-archive"></i> <?php esc_html_e("Archive", 'duplicator') ?>
+                                <i class="far fa-file-archive"></i> <?php esc_html_e("Backup", 'duplicator') ?>
                             </button>
-                            <button type="button" class="button no-select" title="<?php esc_attr_e("Package Details", 'duplicator') ?>" onclick="Duplicator.Pack.OpenPackageDetails(<?php echo "{$Package->ID}"; ?>);">
+                            <button type="button" class="button no-select" title="<?php esc_attr_e("Backup Details", 'duplicator') ?>" onclick="Duplicator.Pack.OpenPackageDetails(<?php echo "{$Package->ID}"; ?>);">
                                 <i class="fa fa-archive fa-sm" ></i>
                             </button>
                         </td>
@@ -310,6 +324,7 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
             DUP_Package::by_status_callback('tablePackageRow', array(), false, 0, '`id` DESC');
             ?>
             <tfoot>
+                <?php do_action('duplicator_before_packages_footer') ?>
                 <tr>
                     <th colspan="11">
                         <div class="sc-footer-left">
@@ -322,14 +337,14 @@ if (DUP_Settings::Get('installer_name_mode') == DUP_Settings::INSTALLER_NAME_MOD
                                 esc_html_e('Duplicator Lite does not officially support WordPress multisite.', 'duplicator');
                                 echo '<br/>';
                                 esc_html_e('We strongly recommend using', 'duplicator');
-                                echo "&nbsp;<i><a href='https://snapcreek.com/duplicator/?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=free_is_mu_warn2&utm_campaign=duplicator_pro' target='_blank'>[" . esc_html__('Duplicator Pro', 'duplicator') . "]</a></i>.";
+                                echo "&nbsp;<i><a href='" . esc_url(Upsell::getCampaignUrl('packages-list', "Mutlisite bottom package list")) . "' target='_blank'>[" . esc_html__('Duplicator Pro', 'duplicator') . "]</a></i>.";
                             }
                             ?>
                         </div>
                         <div class="sc-footer-right">
                            <span style="cursor:help" title="<?php esc_attr_e("Current Server Time", 'duplicator') ?>">
                             <?php
-                                $dup_serv_time = date_i18n('H:i');                               
+                                $dup_serv_time = date_i18n('H:i');
                                 esc_html_e("Time", 'duplicator');
                                 echo ": {$dup_serv_time}";
                             ?>
@@ -364,13 +379,13 @@ $alert1->initAlert();
 $alert2           = new DUP_UI_Dialog();
 $alert2->title    = __('Selection Required', 'duplicator', 'duplicator');
 $alert2->message  = '<i class="fa fa-exclamation-triangle fa-sm"></i>&nbsp;';
-$alert2->message .= __('No selections made! Please select at least one package to delete.', 'duplicator');
+$alert2->message .= __('No selections made! Please select at least one Backup to delete.', 'duplicator');
 $alert2->initAlert();
 
 $confirm1               = new DUP_UI_Dialog();
-$confirm1->title        = __('Delete Packages?', 'duplicator');
-$confirm1->message      = __('Are you sure you want to delete the selected package(s)?', 'duplicator');
-$confirm1->progressText = __('Removing Packages, Please Wait...', 'duplicator');
+$confirm1->title        = __('Delete Backups?', 'duplicator');
+$confirm1->message      = __('Are you sure you want to delete the selected Backup(s)?', 'duplicator');
+$confirm1->progressText = __('Removing Backups, Please Wait...', 'duplicator');
 $confirm1->jscallback   = 'Duplicator.Pack.Delete()';
 $confirm1->initConfirm();
 
@@ -383,7 +398,7 @@ $alert3->initAlert();
 
 $alertPackRunning          = new DUP_UI_Dialog();
 $alertPackRunning->title   = __('Alert!', 'duplicator');
-$alertPackRunning->message = __('A package is being processed. Retry later.', 'duplicator');
+$alertPackRunning->message = __('A Backup is being processed. Retry later.', 'duplicator');
 $alertPackRunning->initAlert();
 ?>
 
@@ -391,27 +406,27 @@ $alertPackRunning->initAlert();
 DIALOG: HELP DIALOG -->
 <div id="dup-help-dlg-info" style="display:none">
     <b><?php esc_html_e("Common Questions:", 'duplicator') ?></b><hr size='1'/>
-    <i class="far fa-file-alt fa-sm"></i> 
-    <a href="https://snapcreek.com/duplicator/docs/quick-start?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=help_btn_pack_help&utm_campaign=duplicator_free#quick-010-q" target="_blank">
-        <?php esc_html_e("How do I create a package", 'duplicator') ?>
+    <i class="far fa-file-alt fa-sm"></i>
+    <a href="<?php echo esc_url(LinkManager::getDocUrl('backup-site', 'packages_help_popup', 'create_package')); ?>" target="_blank">
+        <?php esc_html_e("How do I create a Backup", 'duplicator') ?>
     </a> <br/>
     <i class="far fa-file-alt fa-sm"></i> 
-    <a href="https://snapcreek.com/duplicator/docs/quick-start/?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=help_btn_install_help&utm_campaign=duplicator_free#install_site" target="_blank">
-        <?php esc_html_e('How do I install a package?', 'duplicator'); ?>
+    <a href="<?php echo esc_url(LinkManager::getDocUrl('classic-install', 'packages_help_popup', 'classic_install')); ?>" target="_blank">
+        <?php esc_html_e('How do I install a Backup?', 'duplicator'); ?>
     </a>  <br/>
-    <i class="far fa-file-code"></i> 
-    <a href="https://snapcreek.com/duplicator/docs/faqs-tech?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=help_btn_faq&utm_campaign=duplicator_free" target="_blank"><?php esc_html_e("Frequently Asked Questions!", 'duplicator') ?></a>
+    <i class="far fa-file-code"></i>
+    <a href="<?php echo esc_url(LinkManager::getCategoryUrl(LinkManager::TROUBLESHOOTING_CAT, 'packages_help_popup', 'FAQ')); ?>" target="_blank">
+        <?php esc_html_e("Frequently Asked Questions!", 'duplicator') ?>
+    </a>
     <br/><br/>
 
     <b><?php esc_html_e("Other Resources:", 'duplicator') ?></b><hr size='1'/>
     <i class="fas fa-question-circle fa-sm fa-fw"></i>
-    <a href="https://snapcreek.com/ticket?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=help_btn_ticket&utm_campaign=duplicator_free" target="_blank"><?php esc_html_e("Need help with the plugin?", 'duplicator') ?></a> <br/>
+    <a href="https://wordpress.org/support/plugin/duplicator/" target="_blank"><?php esc_html_e("Need help with the plugin?", 'duplicator') ?></a> <br/>
 
-    <i class="fa fa-lightbulb fa-fw"></i>
-    <a href="https://snapcreek.com/ticket/index.php?a=add&category=69" target="_blank"><?php esc_html_e("Have an idea for the plugin?", 'duplicator') ?></a> <br/>
     <?php if ($completeCount >= 3) : ?>
         <i class="fa fa-star fa-fw"></i>
-        <a href="https://wordpress.org/support/plugin/duplicator/reviews/?filter=5" target="vote-wp"><?php esc_html_e("Help review the plugin!", 'duplicator') ?></a>
+        <a href="<?php echo esc_url(\Duplicator\Core\Notifications\Review::getReviewUrl()); ?>" target="vote-wp"><?php esc_html_e("Help review the plugin!", 'duplicator') ?></a>
     <?php endif; ?>
 </div>
 

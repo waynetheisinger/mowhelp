@@ -1,8 +1,11 @@
 <?php
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
+
+use Duplicator\Views\AdminNotices;
+
     //Nonce Check
 if (! isset($_POST['dup_form_opts_nonce_field']) || ! wp_verify_nonce(sanitize_text_field($_POST['dup_form_opts_nonce_field']), 'dup_form_opts')) {
-    DUP_UI_Notice::redirect('admin.php?page=duplicator&tab=new1&_wpnonce=' . wp_create_nonce('new1-package'));
+    AdminNotices::redirect('admin.php?page=duplicator&tab=new1&_wpnonce=' . wp_create_nonce('new1-package'));
 }
 
     global $wp_version;
@@ -122,9 +125,7 @@ if (empty($_POST)) {
     
     /*WARNING-CONTINUE*/
     div#dup-scan-warning-continue {display:none; text-align:center; padding:0 0 15px 0}
-    div#dup-scan-warning-continue div.msg1 label{font-size:16px; color:#630f0f}
-    div#dup-scan-warning-continue div.msg2 {padding:2px; line-height:13px}
-    div#dup-scan-warning-continue div.msg2 label {font-size:11px !important}
+    div#dup-scan-warning-continue div.msg2 {padding:2px; line-height:13px; font-size:11px !important;}
     div.dup-pro-support {text-align:center; font-style:italic; font-size:13px; margin-top:20px;font-weight:bold}
 
     /*DIALOG WINDOWS*/
@@ -202,13 +203,18 @@ TOOL BAR:STEPS -->
 <?php wp_nonce_field('dup_form_opts', 'dup_form_opts_nonce_field', false); ?>
 
     <!--  PROGRESS BAR -->
-    <div id="dup-progress-bar-area">
-        <div class="dup-progress-title"><i class="fas fa-circle-notch fa-spin"></i> <?php esc_html_e('Scanning Site', 'duplicator'); ?></div>
-        <div id="dup-progress-bar"></div>
-        <b><?php esc_html_e('Please Wait...', 'duplicator'); ?></b><br/><br/>
-        <i><?php esc_html_e('Keep this window open during the scan process.', 'duplicator'); ?></i><br/>
-        <i><?php esc_html_e('This can take several minutes.', 'duplicator'); ?></i><br/>
+    <div id="dup-scan-progress-bar-wrapper">
+        <?php do_action('duplicator_scan_progress_header'); ?>
+        <div id="dup-progress-bar-area">
+            <div class="dup-progress-title"><i class="fas fa-circle-notch fa-spin"></i> <?php esc_html_e('Scanning Site', 'duplicator'); ?></div>
+            <div id="dup-progress-bar"></div>
+            <b><?php esc_html_e('Please Wait...', 'duplicator'); ?></b><br/><br/>
+            <i><?php esc_html_e('Keep this window open during the scan process.', 'duplicator'); ?></i><br/>
+            <i><?php esc_html_e('This can take several minutes.', 'duplicator'); ?></i><br/>
+        </div>
+        <?php do_action('duplicator_scan_progress_footer'); ?>
     </div>
+
 
     <!--  ERROR MESSAGE -->
     <div id="dup-msg-error" style="display:none">
@@ -243,30 +249,19 @@ TOOL BAR:STEPS -->
 
         <!-- WARNING CONTINUE -->
         <div id="dup-scan-warning-continue">
-            <div class="msg1">
-                <label for="dup-scan-warning-continue-checkbox">
-                    <?php esc_html_e('A notice status has been detected, are you sure you want to continue?', 'duplicator');?>
-                </label>
-                <div style="padding:8px 0">
-                    <input type="checkbox" id="dup-scan-warning-continue-checkbox" onclick="Duplicator.Pack.warningContinue(this)"/>
-                    <label for="dup-scan-warning-continue-checkbox"><?php esc_html_e('Yes.  Continue with the build process!', 'duplicator');?></label>
-                </div>
-            </div>
             <div class="msg2">
-                <label for="dup-scan-warning-continue-checkbox">
-                    <?php
-                        _e("Scan checks are not required to pass, however they could cause issues on some systems.", 'duplicator');
-                        echo '<br/>';
-                        _e("Please review the details for each section by clicking on the detail title.", 'duplicator');
-                    ?>
-                </label>
+                <?php
+                    _e("Scan checks are not required to pass, however they could cause issues on some systems.", 'duplicator');
+                    echo '<br/>';
+                    _e("Please review the details for each section by clicking on the detail title.", 'duplicator');
+                ?>
             </div>
         </div>
 
         <div id="dup-confirm-area"> 
             <label for="duplicator-confirm-check"><?php esc_html_e('Do you want to continue?', 'duplicator');
             echo '<br/> ';
-            esc_html_e('At least one or more checkboxes was checked in "Quick Filters".', 'duplicator') ?><br/> 
+            esc_html_e('At least one or more checkboxes were checked in "Quick Filters".', 'duplicator') ?><br/> 
             <i style="font-weight:normal"><?php esc_html_e('To apply a "Quick Filter" click the "Add Filters & Rescan" button', 'duplicator') ?></i><br/> 
             <input type="checkbox" id="duplicator-confirm-check" onclick="jQuery('#dup-build-button').removeAttr('disabled');"> 
             <?php esc_html_e('Yes. Continue without applying any file filters.', 'duplicator') ?></label><br/> 
@@ -302,7 +297,7 @@ jQuery(document).ready(function($)
                 } catch(err) {
                     console.error(err);
                     console.error('JSON parse failed for response data: ' + respData);
-                    $('#dup-progress-bar-area').hide();
+                    $('#dup-scan-progress-bar-wrapper').hide();
                     var status = xHr.status + ' -' + xHr.statusText;
                     $('#dup-msg-error-response-status').html(status)
                     $('#dup-msg-error-response-text').html(xHr.responseText);
@@ -313,7 +308,7 @@ jQuery(document).ready(function($)
                 Duplicator.Pack.loadScanData(data);
             },
             error: function(data) {
-                $('#dup-progress-bar-area').hide();
+                $('#dup-scan-progress-bar-wrapper').hide();
                 var status = data.status + ' -' + data.statusText;
                 $('#dup-msg-error-response-status').html(status)
                 $('#dup-msg-error-response-text').html(data.responseText);
@@ -326,7 +321,7 @@ jQuery(document).ready(function($)
     //Loads the scanner data results into the various sections of the screen
     Duplicator.Pack.loadScanData = function(data)
     {
-        $('#dup-progress-bar-area').hide();
+        $('#dup-scan-progress-bar-wrapper').hide();
 
         //ERROR: Data object is corrupt or empty return error
         if (data == undefined || data.RPT == undefined) {
@@ -355,10 +350,6 @@ jQuery(document).ready(function($)
         var warnCount = data.RPT.Warnings || 0;
         if (warnCount > 0) {
             $('#dup-scan-warning-continue').show();
-            $('#dup-build-button').prop("disabled",true).removeClass('button-primary');
-            if ($('#dup-scan-warning-continue-checkbox').is(':checked')) {
-                $('#dup-build-button').removeAttr('disabled').addClass('button-primary');
-            }
         } else {
             $('#dup-scan-warning-continue').hide();
             $('#dup-build-button').prop("disabled",false).addClass('button-primary');
@@ -406,7 +397,7 @@ jQuery(document).ready(function($)
     Duplicator.Pack.rescan = function()
     {
         $('#dup-msg-success,#dup-msg-error, #dup-confirm-area, .dup-button-footer').hide();
-        $('#dup-progress-bar-area').show();
+        $('#dup-scan-progress-bar-wrapper').show();
         Duplicator.Pack.runScanner();
     }
 
@@ -428,8 +419,17 @@ jQuery(document).ready(function($)
         html_msg += '<?php esc_html_e("3. This message will go away once the correct filters are applied.", 'duplicator') ?><br/><br/>';
 
         html_msg += '<?php esc_html_e("Common Issues:", 'duplicator') ?><ul>';
-        html_msg += '<li><?php esc_html_e("- On some budget hosts scanning over 30k files can lead to timeout/gateway issues. Consider scanning only your main WordPress site and avoid trying to backup other external directories.", 'duplicator') ?></li>';
-        html_msg += '<li><?php esc_html_e("- Symbolic link recursion can cause timeouts.  Ask your server admin if any are present in the scan path.  If they are add the full path as a filter and try running the scan again.", 'duplicator') ?></li>';
+        html_msg += '<li><?php esc_html_e(
+            "- On some budget hosts scanning over 30k files can lead to timeout/gateway issues. " .
+            "Consider scanning only your main WordPress site and avoid trying to backup other external directories.",
+            'duplicator'
+        ) ?></li>';
+        html_msg += '<li><?php esc_html_e(
+            "- Symbolic link recursion can cause timeouts. " .
+            "Ask your server admin if any are present in the scan path. " .
+            "If they are add the full path as a filter and try running the scan again.",
+            'duplicator'
+        ) ?></li>';
         html_msg += '</ul>';
         $('#dup-msg-error-response-status').html('Scan Path Error [<?php echo esc_js(duplicator_get_abs_path()); ?>]');
         $('#dup-msg-error-response-text').html(html_msg);

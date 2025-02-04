@@ -4,10 +4,10 @@
  * Security class
  *
  * Standard: PSR-2
+ *
  * @link http://www.php-fig.org/psr/psr-2 Full Documentation
  *
  * @package SC\DUPX\Constants
- *
  */
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
@@ -21,7 +21,6 @@ use Duplicator\Libs\Snap\SnapUtil;
 
 /**
  * singleton class
- *
  *
  * In this class all installer security checks are performed. If the security checks are not passed, an exception is thrown and the installer is stopped.
  * This happens before anything else so the class must work without the initialization of all global duplicator variables.
@@ -43,42 +42,49 @@ class DUPX_Security
 
     /**
      * archive path read from  csrf file
+     *
      * @var string
      */
     private $archivePath = null;
 
     /**
      * installer name read from csrf file
+     *
      * @var string
      */
     private $bootloader = null;
 
     /**
      * installer url path read from csrf file
+     *
      * @var string
      */
     private $bootUrl = null;
 
     /**
      * boot log file full path read from csrf file
+     *
      * @var string
      */
     private $bootFilePath = null;
 
     /**
      * boot log file full path read from csrf file
+     *
      * @var string
      */
     private $bootLogFile = null;
 
     /**
      * package hash read from csrf file
+     *
      * @var string
      */
     private $packageHash = null;
 
     /**
      * public package hash read from csrf file
+     *
      * @var string
      */
     private $secondaryPackageHash = null;
@@ -250,7 +256,7 @@ class DUPX_Security
                 /**
                  * comment error_clear_last if you want see te exception html on shutdown
                  */
-                error_clear_last();
+                error_clear_last(); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctions.error_clear_lastFound
             }
 
             Log::logException($e, Log::LV_DEFAULT, 'SECURITY CHECK: ');
@@ -267,6 +273,7 @@ class DUPX_Security
      * get sanitized token frominput
      *
      * @param string $tokenName
+     *
      * @return string
      */
     protected static function getTokenFromInput($tokenName)
@@ -287,7 +294,7 @@ class DUPX_Security
 
         $archiveConfig = DUPX_ArchiveConfig::getInstance();
 
-        if ($archiveConfig->secure_on === true) {
+        if ($archiveConfig->secure_on) {
             return self::SECURITY_PASSWORD;
         }
 

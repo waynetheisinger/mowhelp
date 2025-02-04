@@ -1,0 +1,36 @@
+h1,
+h2,
+h3 {
+    font-family: var(--family-title) !important;
+}
+
+h4,
+h5,
+h6,
+p,
+a,
+ul,
+li,
+span,
+input,
+select,
+button {
+    font-family: var(--family-primary) !important;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+a {
+    color: var(--color-link);
+}
+
+.content {
+    p {
+        a {
+            color: var(--color-link);
+        }
+    }
+}

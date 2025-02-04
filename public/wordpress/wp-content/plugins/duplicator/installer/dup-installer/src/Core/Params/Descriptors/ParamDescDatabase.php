@@ -84,7 +84,7 @@ final class ParamDescDatabase implements DescriptorInterface
             array(
                 'persistence'      => true,
                 'default'          => 'localhost',
-                'sanitizeCallback' => array('\\Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline'),
+                'sanitizeCallback' => array('Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline'),
                 'validateCallback' => array(__CLASS__, 'validateNoEmptyIfBasic'),
                 'invalidMessage'   => self::INVALID_EMPTY
             ),
@@ -105,7 +105,7 @@ final class ParamDescDatabase implements DescriptorInterface
             array(
                 'persistence'      => true,
                 'default'          => '',
-                'sanitizeCallback' => array('\\Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline'),
+                'sanitizeCallback' => array('Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline'),
                 'validateCallback' => array(__CLASS__, 'validateNoEmptyIfBasic'),
                 'invalidMessage'   => self::INVALID_EMPTY
             ),
@@ -127,7 +127,7 @@ final class ParamDescDatabase implements DescriptorInterface
             array(
                 'persistence'      => true,
                 'default'          => '',
-                'sanitizeCallback' => array('\\Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline'),
+                'sanitizeCallback' => array('Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline'),
                 'validateCallback' => array(__CLASS__, 'validateNoEmptyIfBasic'),
                 'invalidMessage'   => self::INVALID_EMPTY
             ),
@@ -150,7 +150,7 @@ final class ParamDescDatabase implements DescriptorInterface
             array(
                 'persistence'      => true,
                 'default'          => '',
-                'sanitizeCallback' => array('\\Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline')
+                'sanitizeCallback' => array('Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewline')
             ),
             array(
                 'label'          => 'Password:',
@@ -175,6 +175,7 @@ final class ParamDescDatabase implements DescriptorInterface
                         MYSQLI_CLIENT_SSL,
                     );
                     if (defined("MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT")) {
+                        // phpcs:ignore PHPCompatibility.Constants.NewConstants.mysqli_client_ssl_dont_verify_server_certFound
                         $result[] = MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
                     }
                     return $result;
@@ -188,7 +189,7 @@ final class ParamDescDatabase implements DescriptorInterface
             ParamForm::FORM_TYPE_SELECT,
             array(
                 'default'          => $archiveConfig->getWpConfigDefineValue('DB_CHARSET', ''),
-                'sanitizeCallback' => array('\\Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewlineTrim'),
+                'sanitizeCallback' => array('Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewlineTrim'),
                 'validateRegex'    => ParamForm::VALIDATE_REGEX_AZ_NUMBER_SEP_EMPTY
             ),
             array(
@@ -210,7 +211,7 @@ final class ParamDescDatabase implements DescriptorInterface
             ParamForm::FORM_TYPE_SELECT,
             array(
                 'default'          => $archiveConfig->getWpConfigDefineValue('DB_COLLATE', ''),
-                'sanitizeCallback' => array('\\Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewlineTrim'),
+                'sanitizeCallback' => array('Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewlineTrim'),
                 'validateRegex'    => ParamForm::VALIDATE_REGEX_AZ_NUMBER_SEP_EMPTY
             ),
             array(
@@ -232,7 +233,7 @@ final class ParamDescDatabase implements DescriptorInterface
             ParamForm::FORM_TYPE_TEXT,
             array(
                 'default'          => \DUPX_ArchiveConfig::getInstance()->wp_tableprefix,
-                'sanitizeCallback' => array('\\Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewlineTrim'),
+                'sanitizeCallback' => array('Duplicator\\Libs\\Snap\\SnapUtil', 'sanitizeNSCharsNewlineTrim'),
                 'validateRegex'    => ParamForm::VALIDATE_REGEX_AZ_NUMBER_SEP
             ),
             array(
@@ -311,7 +312,7 @@ final class ParamDescDatabase implements DescriptorInterface
             )
         );
 
-        $newObj                                   = new ParamForm(
+        $newObj = new ParamForm(
             PrmMng::PARAM_DB_MYSQL_MODE_OPTS,
             ParamForm::TYPE_STRING,
             ParamForm::FORM_TYPE_TEXT,
@@ -405,6 +406,7 @@ final class ParamDescDatabase implements DescriptorInterface
 
     /**
      * Get charset options list
+     *
      * @return ParamOption[]
      */
     public static function getCharsetSelectOptions()

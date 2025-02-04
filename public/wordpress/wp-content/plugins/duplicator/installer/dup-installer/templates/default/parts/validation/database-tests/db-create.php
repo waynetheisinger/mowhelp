@@ -3,8 +3,9 @@
 /**
  *
  * @package templates/default
- *
  */
+
+use Duplicator\Installer\Utils\InstallerLinkManager;
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 
@@ -70,8 +71,11 @@ $statusClass = $isOk ? 'green' : 'red';
         <li>Try using the <a href="javascript:void(0)" onclick="DUPX.togglePanels('cpanel')">'cPanel'</a> option.</li>
     <?php } ?>
     <li>
-        <a href="<?php echo DUPX_U::esc_attr(DUPX_Constants::FAQ_URL); ?>#faq-installer-100-q" target="_help"
-           title="I'm running into issues with the Database what can I do?">
+        <a 
+            href="<?php echo InstallerLinkManager::getDocUrl('how-to-fix-database-connection-issues', 'install', 'validation db create'); ?>" 
+            target="_help"
+            title="I'm running into issues with the Database what can I do?"
+        >
             [Additional FAQ Help]
         </a>
     </li>

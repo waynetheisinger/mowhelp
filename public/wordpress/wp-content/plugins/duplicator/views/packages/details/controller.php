@@ -1,4 +1,9 @@
 <?php
+
+use Duplicator\Utils\LinkManager;
+use Duplicator\Core\Bootstrap;
+use Duplicator\Core\Views\TplMng;
+
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 DUP_Util::hasCapability('manage_options');
 global $wpdb;
@@ -6,19 +11,8 @@ global $wpdb;
 //COMMON HEADER DISPLAY
 $current_tab = isset($_REQUEST['tab']) ? sanitize_text_field($_REQUEST['tab']) : 'detail';
 $package_id  = isset($_REQUEST["id"])  ? sanitize_text_field($_REQUEST["id"]) : 0;
-
-$package         = DUP_Package::getByID($package_id);
-$err_found       = ($package == null || $package->Status < 100);
-$link_log        = DUP_Settings::getSsdirUrl() . "/{$package->NameHash}.log";
-$err_link_log    = "<a target='_blank' href='" . esc_url($link_log) . "' >" . esc_html__('package log', 'duplicator') . '</a>';
-$err_link_faq    = '<a target="_blank" href="https://snapcreek.com/duplicator/docs/faqs-tech/' .
-    '?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_campaign=problem_resolution&utm_content=pkg_details_faq">' .
-    esc_html__('FAQ', 'duplicator') .
-    '</a>';
-$err_link_ticket = '<a target="_blank" href="https://snapcreek.com/duplicator/docs/faqs-tech/' .
-    '?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_campaign=problem_resolution&utm_content=pkg_details_resources#faq-resource">' .
-    esc_html__('resources page', 'duplicator') .
-    '</a>';
+$package     = DUP_Package::getByID($package_id);
+$err_found   = ($package == null || $package->Status < 100);
 ?>
 
 <style>
@@ -30,14 +24,43 @@ $err_link_ticket = '<a target="_blank" href="https://snapcreek.com/duplicator/do
 
 <div class="wrap">
     <?php
-        duplicator_header(__("Package Details &raquo; {$package->Name}", 'duplicator'));
-    ?>
+        duplicator_header(
+            sprintf(
+                esc_html_x(
+                    'Backup Details &raquo; %1$s',
+                    '%1$s represents the Backup name',
+                    'duplicator'
+                ),
+                esc_html($package->Name)
+            )
+        );
+        ?>
 
     <?php if ($err_found) :?>
     <div class="error">
         <p>
-            <?php echo esc_html__('This package contains an error.  Please review the ', 'duplicator') . $err_link_log .  esc_html__(' for details.', 'duplicator'); ?>
-            <?php echo esc_html__('For help visit the ', 'duplicator') . $err_link_faq . esc_html__(' and ', 'duplicator') . $err_link_ticket; ?>
+        <?php printf(
+            _x(
+                'This Backup contains an error. Please review the %1$sBackup log%2$s for details.',
+                '%1 and %2 are replaced with <a> and </a> respectively',
+                'duplicator'
+            ),
+            '<a href="' . DUP_Settings::getSsdirUrl() . '/{$package->NameHash}.log" target="_blank">',
+            '</a>'
+        );
+        ?>
+        <?php printf(
+            _x(
+                'For help visit the %1$sFAQ%2$s and %3$sresources page%4$s.',
+                '%1, %3 and %2, %4 are replaced with <a> and </a> respectively',
+                'duplicator'
+            ),
+            '<a href="' . esc_url(LinkManager::getCategoryUrl(LinkManager::TROUBLESHOOTING_CAT, 'failed_package_details_notice', 'FAQ')) . '" target="_blank">',
+            '</a>',
+            '<a href="' . esc_url(LinkManager::getCategoryUrl(LinkManager::RESOURCES_CAT, 'failed_package_details_notice', 'resources page')) . '" target="_blank">',
+            '</a>'
+        );
+        ?>
         </p>
     </div>
     <?php endif; ?>
@@ -50,7 +73,7 @@ $err_link_ticket = '<a target="_blank" href="https://snapcreek.com/duplicator/do
             <?php esc_html_e('Transfer', 'duplicator'); ?>
         </a>
     </h2>
-    <div class="all-packages"><a href="?page=duplicator" class="button"><i class="fa fa-archive fa-sm"></i> <?php esc_html_e('Packages', 'duplicator'); ?></a></div>
+    <div class="all-packages"><a href="?page=duplicator" class="button"><i class="fa fa-archive fa-sm"></i> <?php esc_html_e('Backups', 'duplicator'); ?></a></div>
 
     <?php
     switch ($current_tab) {
@@ -58,7 +81,8 @@ $err_link_ticket = '<a target="_blank" href="https://snapcreek.com/duplicator/do
             include(DUPLICATOR_PLUGIN_PATH . 'views/packages/details/detail.php');
             break;
         case 'transfer':
-            include(DUPLICATOR_PLUGIN_PATH . 'views/packages/details/transfer.php');
+            Bootstrap::mocksStyles();
+            TplMng::getInstance()->render('mocks/transfer/transfer', array(), true);
             break;
     }
     ?>

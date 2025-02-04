@@ -3,8 +3,9 @@
 /**
  *
  * @package templates/default
- *
  */
+
+use Duplicator\Installer\Utils\InstallerLinkManager;
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 
@@ -37,5 +38,7 @@ defined('ABSPATH') || defined('DUPXABSPATH') || exit;
     If this notice shows as a warning then it is still safe to continue with the install.  
     However, if a timeout occurs then you will need to consider working with the max_execution_time setting or extracting the
     archive file using the 'Manual Archive Extraction' method. &nbsp;
-    <a href="https://snapcreek.com/duplicator/docs/faqs-tech/#faq-trouble-100-q" target="_blank">[Additional FAQ Help]</a>
+    <a href="<?php echo InstallerLinkManager::getDocUrl('how-to-handle-server-timeout-issues', 'install', 'validation timeout'); ?>" target="_blank">
+        [Additional FAQ Help]
+    </a>
 </p>

@@ -64,15 +64,25 @@ function add_shortcode( $tag, $callback ) {
 	global $shortcode_tags;
 
 	if ( '' === trim( $tag ) ) {
-		$message = __( 'Invalid shortcode name: Empty name given.' );
-		_doing_it_wrong( __FUNCTION__, $message, '4.4.0' );
+		_doing_it_wrong(
+			__FUNCTION__,
+			__( 'Invalid shortcode name: Empty name given.' ),
+			'4.4.0'
+		);
 		return;
 	}
 
 	if ( 0 !== preg_match( '@[<>&/\[\]\x00-\x20=]@', $tag ) ) {
-		/* translators: 1: Shortcode name, 2: Space-separated list of reserved characters. */
-		$message = sprintf( __( 'Invalid shortcode name: %1$s. Do not use spaces or reserved characters: %2$s' ), $tag, '& / < > [ ] =' );
-		_doing_it_wrong( __FUNCTION__, $message, '4.4.0' );
+		_doing_it_wrong(
+			__FUNCTION__,
+			sprintf(
+				/* translators: 1: Shortcode name, 2: Space-separated list of reserved characters. */
+				__( 'Invalid shortcode name: %1$s. Do not use spaces or reserved characters: %2$s' ),
+				$tag,
+				'& / < > [ ] ='
+			),
+			'4.4.0'
+		);
 		return;
 	}
 
@@ -160,7 +170,45 @@ function has_shortcode( $content, $tag ) {
 }
 
 /**
- * Search content for shortcodes and filter shortcodes through their hooks.
+ * Returns a list of registered shortcode names found in the given content.
+ *
+ * Example usage:
+ *
+ *     get_shortcode_tags_in_content( '[audio src="file.mp3"][/audio] [foo] [gallery ids="1,2,3"]' );
+ *     // array( 'audio', 'gallery' )
+ *
+ * @since 6.3.2
+ *
+ * @param string $content The content to check.
+ * @return string[] An array of registered shortcode names found in the content.
+ */
+function get_shortcode_tags_in_content( $content ) {
+	if ( false === strpos( $content, '[' ) ) {
+		return array();
+	}
+
+	preg_match_all( '/' . get_shortcode_regex() . '/', $content, $matches, PREG_SET_ORDER );
+	if ( empty( $matches ) ) {
+		return array();
+	}
+
+	$tags = array();
+	foreach ( $matches as $shortcode ) {
+		$tags[] = $shortcode[2];
+
+		if ( ! empty( $shortcode[5] ) ) {
+			$deep_tags = get_shortcode_tags_in_content( $shortcode[5] );
+			if ( ! empty( $deep_tags ) ) {
+				$tags = array_merge( $tags, $deep_tags );
+			}
+		}
+	}
+
+	return $tags;
+}
+
+/**
+ * Searches content for shortcodes and filter shortcodes through their hooks.
  *
  * This function is an alias for do_shortcode().
  *
@@ -299,8 +347,8 @@ function get_shortcode_regex( $tagnames = null ) {
  *
  * @global array $shortcode_tags
  *
- * @param array $m Regular expression match array
- * @return string|false False on failure.
+ * @param array $m Regular expression match array.
+ * @return string|false Shortcode output on success, false on failure.
  */
 function do_shortcode_tag( $m ) {
 	global $shortcode_tags;
@@ -314,9 +362,12 @@ function do_shortcode_tag( $m ) {
 	$attr = shortcode_parse_atts( $m[3] );
 
 	if ( ! is_callable( $shortcode_tags[ $tag ] ) ) {
-		/* translators: %s: Shortcode tag. */
-		$message = sprintf( __( 'Attempting to parse a shortcode without a valid callback: %s' ), $tag );
-		_doing_it_wrong( __FUNCTION__, $message, '4.3.0' );
+		_doing_it_wrong(
+			__FUNCTION__,
+			/* translators: %s: Shortcode tag. */
+			sprintf( __( 'Attempting to parse a shortcode without a valid callback: %s' ), $tag ),
+			'4.3.0'
+		);
 		return $m[0];
 	}
 

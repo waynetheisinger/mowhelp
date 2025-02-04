@@ -120,9 +120,8 @@ web server is not set up properly.
 Please contact your host and ask them to enable "PHP" processing on your
 account.
 ----------------------------- NOTICE --------------------------------- */
-?>
 HEADER;
-        $installer_contents = $header . SnapCode::getSrcClassCode($template_filepath, false) . "\n/* DUPLICATOR_INSTALLER_EOF */";
+        $installer_contents = $header . SnapCode::getSrcClassCode($template_filepath, false, true) . "\n/* DUPLICATOR_INSTALLER_EOF */";
         // $installer_contents     = file_get_contents($template_filepath);
         // $csrf_class_contents = file_get_contents($csrf_class_filepath);
 
@@ -174,7 +173,7 @@ HEADER;
         $hasher                  = new DUP_PasswordHash(8, false);
         $pass_hash               = $hasher->HashPassword($this->Package->Installer->OptsSecurePass);
         $this->Package->Database->getScannerData();
-//READ-ONLY: COMPARE VALUES
+        // READ-ONLY: COMPARE VALUES
         $ac->created     = $this->Package->Created;
         $ac->version_dup = DUPLICATOR_VERSION;
         $ac->version_wp  = $this->Package->VersionWP;
@@ -194,7 +193,18 @@ HEADER;
             'size'      => $this->Package->Archive->Size
         );
         $ac->wpInfo      = $this->getWpInfo();
-
+        if ($this->Package->Archive->ExportOnlyDB) {
+            $ac->components = array('package_component_db');
+        } else {
+            $ac->components = array(
+                'package_component_db',
+                'package_component_core',
+                'package_component_plugins',
+                'package_component_themes',
+                'package_component_uploads',
+                'package_component_other'
+            );
+        }
         $ac->installer_base_name   = 'installer' . self::INSTALLER_SERVER_EXTENSION;
         $ac->installer_backup_name = $this->Package->NameHash . '_installer-backup.php';
         $ac->package_name          = "{$this->Package->NameHash}_archive.{$extension}";
@@ -206,17 +216,16 @@ HEADER;
         $ac->exportOnlyDB = $this->Package->Archive->ExportOnlyDB;
 
         // PRE-FILLED: GENERAL
-        $ac->secure_on   = filter_var($this->Package->Installer->OptsSecureOn, FILTER_VALIDATE_BOOLEAN);
+        $ac->secure_on   = (int) filter_var($this->Package->Installer->OptsSecureOn, FILTER_VALIDATE_BOOLEAN);
         $ac->secure_pass = $pass_hash;
         $ac->dbhost      = (strlen($this->Package->Installer->OptsDBHost) ? $this->Package->Installer->OptsDBHost : null);
         $ac->dbname      = (strlen($this->Package->Installer->OptsDBName) ? $this->Package->Installer->OptsDBName : null);
         $ac->dbuser      = (strlen($this->Package->Installer->OptsDBUser) ? $this->Package->Installer->OptsDBUser : null);
-        $ac->dbpass      = null;
 
         $ac->mu_mode        = DUP_MU::getMode();
         $ac->wp_tableprefix = $wpdb->base_prefix;
         $ac->mu_generation  = DUP_MU::getGeneration();
-        $ac->mu_is_filtered = !empty($this->Package->Multisite->FilterSites) ? true : false;
+        $ac->mu_is_filtered = false;
 
         $ac->mu_siteadmins = array_values(get_super_admins());
         $filteredTables    = ($this->Package->Database->FilterOn && isset($this->Package->Database->FilterTables)) ? explode(',', $this->Package->Database->FilterTables) : array();
@@ -388,6 +397,7 @@ HEADER;
         $originalUrls                               = DUP_Archive::getOriginalUrls();
         $wpInfo->configs->realValues->siteUrl       = $originalUrls['abs'];
         $wpInfo->configs->realValues->homeUrl       = $originalUrls['home'];
+        $wpInfo->configs->realValues->loginUrl      = $originalUrls['login'];
         $wpInfo->configs->realValues->contentUrl    = $originalUrls['wpcontent'];
         $wpInfo->configs->realValues->uploadBaseUrl = $originalUrls['uploads'];
         $wpInfo->configs->realValues->pluginsUrl    = $originalUrls['plugins'];
@@ -509,6 +519,7 @@ HEADER;
      *
      * @param string $slug      // plugin slug
      * @param array $plugin     // pluhin info from get_plugins function
+     *
      * @return array
      */
     protected static function getPluginArrayData($slug, $plugin)
@@ -567,6 +578,7 @@ HEADER;
      * return plugin formatted data from plugin info
      *
      * @param WP_Theme $theme instance of WP Core class WP_Theme. theme info from get_themes function
+     *
      * @return array
      */
     protected static function getThemeArrayData(WP_Theme $theme)
@@ -595,8 +607,8 @@ HEADER;
      * return list of extra files to att to archive
      *
      * @param bool $checkExists
+     *
      * @return array
-     * @throws Exception
      */
     private function getExtraFilesLists($checkExists = true)
     {
@@ -746,7 +758,7 @@ HEADER;
             DUP_Log::trace("Doing archive file check");
             // Only way it's 2 is if the root was part of the filter in which case the archive won't be there
             if (file_exists($archive_filepath) == false) {
-                $error_text = sprintf(__("Zip archive %1s not present.", 'dup;icator'), $archive_filepath);
+                $error_text = sprintf(__("Zip archive %1s not present.", 'duplicator'), $archive_filepath);
                 DUP_Log::error($error_text, '', Dup_ErrorBehavior::LogOnly);
                 return false;
             }
@@ -846,10 +858,10 @@ HEADER;
 
         if ($failed) {
             DUP_Log::info(__('ARCHIVE CONSISTENCY TEST: FAIL', 'duplicator'));
-            throw new \Exception("Zip for package " . $this->Package->ID . " didn't passed consistency test");
+            throw new \Exception("Zip for Backup " . $this->Package->ID . " didn't passed consistency test");
         } else {
             DUP_Log::info(__('ARCHIVE CONSISTENCY TEST: PASS', 'duplicator'));
-            DUP_Log::trace("Zip for package " . $this->Package->ID . " passed consistency test");
+            DUP_Log::trace("Zip for Backup " . $this->Package->ID . " passed consistency test");
         }
 
         $zip->close();
@@ -925,7 +937,6 @@ HEADER;
      * Clear out sensitive database connection information
      *
      * @param $temp_conf_ark_file_path Temp config file path
-     * @throws Exception
      */
     private static function cleanTempWPConfArkFilePath($temp_conf_ark_file_path)
     {

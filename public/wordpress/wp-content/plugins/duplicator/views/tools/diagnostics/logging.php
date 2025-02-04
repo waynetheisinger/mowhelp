@@ -1,6 +1,8 @@
 <?php
+
+use Duplicator\Utils\LinkManager;
+
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
-require_once(DUPLICATOR_PLUGIN_PATH . '/assets/js/javascript.php');
 require_once(DUPLICATOR_PLUGIN_PATH . '/views/inc.header.php');
 
 function _duplicatorSortFiles($a, $b)
@@ -164,7 +166,7 @@ jQuery(document).ready(function($)
 <?php if (! $logfound) :   ?>
     <div style="padding:20px">
         <h2><?php esc_html_e("Log file not found or unreadable", 'duplicator') ?>.</h2>
-        <?php esc_html_e("Try to create a package, since no log files were found in the snapshots directory with the extension *.log", 'duplicator') ?>.<br/><br/>
+        <?php esc_html_e("Try to create a Backup, since no log files were found in the snapshots directory with the extension *.log", 'duplicator') ?>.<br/><br/>
         <?php esc_html_e("Reasons for log file not showing", 'duplicator') ?>: <br/>
         - <?php esc_html_e("The web server does not support returning .log file extentions", 'duplicator') ?>. <br/>
         - <?php esc_html_e("The snapshots directory does not have the correct permissions to write files.  Try setting the permissions to 755", 'duplicator') ?>. <br/>
@@ -181,11 +183,15 @@ jQuery(document).ready(function($)
                         data-tooltip="<?php esc_attr_e('Duplicator recommends going with the high performance pro plan or better from our recommended list', 'duplicator'); ?>">
                          <i class="far fa-lightbulb" aria-hidden="true"></i>
                             <?php
+                                $faqUrl = esc_url(LinkManager::getDocUrl('what-host-providers-are-recommended-for-duplicator', 'tools-logging'));
                                 printf(
-                                    "%s <a target='_blank' href='//snapcreek.com/wordpress-hosting/'>%s</a> %s",
-                                    esc_html__("Consider our recommended", 'duplicator'),
-                                    esc_html__("host list", 'duplicator'),
-                                    esc_html__("if you’re unhappy with your current provider", 'duplicator')
+                                    _x(
+                                        'Consider our recommended %1$shost list%2$s if you’re unhappy with your current provider',
+                                        '%1$s and %2$s are <a> tags',
+                                        'duplicator'
+                                    ),
+                                    '<a target="_blank" href="' . $faqUrl . '">',
+                                    '</a>'
                                 );
                             ?>
                     </i>
@@ -206,7 +212,7 @@ jQuery(document).ready(function($)
                 </div>
 
                 <div class="dup-log-hdr">
-                    <?php esc_html_e("Package Logs", 'duplicator') ?>
+                    <?php esc_html_e("Backup Logs", 'duplicator') ?>
                     <small><?php esc_html_e("Top 20", 'duplicator') ?></small>
                 </div>
 

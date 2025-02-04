@@ -3,8 +3,9 @@
 /**
  *
  * @package templates/default
- *
  */
+
+use Duplicator\Installer\Utils\InstallerLinkManager;
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 ?>
@@ -16,8 +17,11 @@ defined('ABSPATH') || defined('DUPXABSPATH') || exit;
             hosting provider or visit the resources below for additional help.
         </i>
         <div style="padding:10px">
-            &raquo; <a href="https://snapcreek.com/duplicator/docs/faqs-tech/" target="_blank">Technical FAQs</a> <br/>
-            &raquo; <a href="https://snapcreek.com/support/docs/" target="_blank">Online Documentation</a> <br/>
+            <?php $url = InstallerLinkManager::getCategoryUrl(InstallerLinkManager::TROUBLESHOOTING_CAT, 'install', 'Technical FAQs'); ?>
+            &raquo; <a href="<?php echo DUPX_U::esc_attr($url); ?>" target="_blank">Technical FAQs</a> <br/>
+            &raquo; <a href="<?php echo InstallerLinkManager::getDocUrl('', 'install', 'Online Documentation'); ?>" target="_blank">
+                Online Documentation
+            </a> <br/>
         </div>
     </div>
 </div>

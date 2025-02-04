@@ -2,9 +2,8 @@
 
 /**
  *
- * @package Duplicator
+ * @package   Duplicator
  * @copyright (c) 2021, Snapcreek LLC
- *
  */
 
 namespace Duplicator\Libs\Snap\JsonSerialize;
@@ -47,9 +46,8 @@ class JsonSerialize extends AbstractJsonSerializeObjData
      */
     public static function unserialize($json, $depth = 512, $flags = 0)
     {
-        $publicArray = (version_compare(PHP_VERSION, '5.4', '>=') ?
-            json_decode($json, true, $depth, $flags) :
-            json_decode($json, true, $depth)
+        // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.json_decode_optionsFound
+        $publicArray = (version_compare(PHP_VERSION, '5.4', '>=') ? json_decode($json, true, $depth, $flags) : json_decode($json, true, $depth)
         );
         return self::jsonDataToValue($publicArray);
     }
@@ -74,9 +72,8 @@ class JsonSerialize extends AbstractJsonSerializeObjData
         } else {
             throw new Exception('invalid obj param');
         }
-        $value = (version_compare(PHP_VERSION, '5.4', '>=') ?
-            json_decode($json, true, $depth, $flags) :
-            json_decode($json, true, $depth)
+        // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.json_decode_optionsFound
+        $value = (version_compare(PHP_VERSION, '5.4', '>=') ? json_decode($json, true, $depth, $flags) : json_decode($json, true, $depth)
         );
         if (!is_array($value)) {
             throw new Exception('json value isn\'t an array VALUE: ' . SnapLog::v2str($value));

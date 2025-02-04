@@ -1,5 +1,8 @@
 <?php
 
+use Duplicator\Utils\LinkManager;
+use Duplicator\Utils\Upsell;
+use Duplicator\Libs\Snap\SnapIO;
 use Duplicator\Libs\Snap\SnapUtil;
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
@@ -8,7 +11,7 @@ global $wp_version;
 global $wpdb;
 
 $action_updated     = null;
-$action_response    = __("Package Settings Saved", 'duplicator');
+$action_response    = __("Backup Settings Saved", 'duplicator');
 $mysqldump_exe_file = '';
 
 //SAVE RESULTS
@@ -22,10 +25,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'save') {
     //Package
     $mysqldump_enabled = isset($_POST['package_dbmode']) && $_POST['package_dbmode'] == 'mysql' ? "1" : "0";
     if (isset($_POST['package_mysqldump_path'])) {
-        $mysqldump_exe_file = SnapUtil::sanitizeNSCharsNewlineTrim($_POST['package_mysqldump_path']);
+        $mysqldump_exe_file = SnapUtil::sanitizeNSCharsNewlineTabs($_POST['package_mysqldump_path']);
         $mysqldump_exe_file = preg_match('/^([A-Za-z]\:)?[\/\\\\]/', $mysqldump_exe_file) ? $mysqldump_exe_file : '';
         $mysqldump_exe_file = preg_replace('/[\'";]/m', '', $mysqldump_exe_file);
-        $mysqldump_exe_file = DUP_Util::safePath($mysqldump_exe_file);
+        $mysqldump_exe_file = SnapIO::safePathUntrailingslashit($mysqldump_exe_file);
         $mysqldump_exe_file = DUP_DB::escSQL(strip_tags($mysqldump_exe_file), true);
     }
 
@@ -124,10 +127,15 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                                     <i class="far fa-lightbulb" aria-hidden="true"></i>
                                     <?php
                                     printf(
-                                        "%s <a target='_blank' href='//snapcreek.com/wordpress-hosting/'>%s</a> %s",
-                                        __("Please visit our recommended", 'duplicator'),
-                                        __("host list", 'duplicator'),
-                                        __("for reliable access to mysqldump", 'duplicator')
+                                        _x(
+                                            'Please visit our recommended %1$shost list%2$s for reliable access to mysqldump.',
+                                            '%1s and %2s represents the opening and closing HTML tags for an anchor or link',
+                                            'duplicator'
+                                        ),
+                                        '<a target="_blank" href="'
+                                        . esc_url(LinkManager::getDocUrl('what-host-providers-are-recommended-for-duplicator', 'settings', 'host list tooltip'))
+                                        . '">',
+                                        '</a>'
                                     );
                                     ?>
                                 </i>
@@ -150,10 +158,15 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                                         . 'If the problem persist contact your host or server administrator.  ', 'duplicator');
 
                                     printf(
-                                        "%s <a target='_blank' href='//snapcreek.com/wordpress-hosting/'>%s</a> %s",
-                                        __("See the", 'duplicator'),
-                                        __("host list", 'duplicator'),
-                                        __("for reliable access to mysqldump.", 'duplicator')
+                                        _x(
+                                            'See the %1$shost list%2$s for reliable access to mysqldump.',
+                                            '%1s and %2s represents the opening and closing HTML tags for an anchor or link',
+                                            'duplicator'
+                                        ),
+                                        '<a target="_blank" href="'
+                                        . esc_url(LinkManager::getDocUrl('what-host-providers-are-recommended-for-duplicator', 'settings', 'host list'))
+                                        . '">',
+                                        '</a>'
                                     );
                                     ?>
                                 </div><br/>
@@ -234,11 +247,11 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
     </table>
 
 
-    <h3 class="title"><?php esc_html_e("Archive", 'duplicator') ?> </h3>
+    <h3 class="title"><?php esc_html_e("Backup", 'duplicator') ?> </h3>
     <hr size="1" />
     <table class="form-table">
         <tr>
-            <th scope="row"><label><?php esc_html_e('Archive Engine', 'duplicator'); ?></label></th>
+            <th scope="row"><label><?php esc_html_e('Backup Engine', 'duplicator'); ?></label></th>
             <td>
                 <div class="engine-radio">
                     <input type="radio" name="archive_build_mode" id="archive_build_mode1" onclick="Duplicator.Pack.ToggleArchiveEngine()"
@@ -249,7 +262,7 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                 <div class="engine-radio">
                     <input type="radio" name="archive_build_mode" id="archive_build_mode2"  onclick="Duplicator.Pack.ToggleArchiveEngine()"
                            value="<?php echo esc_attr(DUP_Archive_Build_Mode::DupArchive); ?>" <?php echo ($archive_build_mode == DUP_Archive_Build_Mode::DupArchive) ? 'checked="checked"' : ''; ?> />
-                    <label for="archive_build_mode2"><?php esc_html_e('DupArchive'); ?></label> &nbsp; &nbsp;
+                    <label for="archive_build_mode2"><?php esc_html_e('DupArchive', 'duplicator'); ?></label> &nbsp; &nbsp;
                 </div>
 
                 <br style="clear:both"/>
@@ -257,14 +270,14 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                 <!-- ZIPARCHIVE -->
                 <div id="engine-details-1" style="display:none">
                     <p class="description">
-                        <?php esc_html_e('Creates a archive format (archive.zip).', 'duplicator');?><br/>
+                        <?php esc_html_e('Creates a Backup format (archive.zip).', 'duplicator');?><br/>
                         <i>
                             <?php
                                 esc_html_e('This option uses the internal PHP ZipArchive classes to create a zip file.', 'duplicator');
                                 echo '&nbsp; ';
                                 esc_html_e('Duplicator Lite has no fixed size constraints for zip formats.  The only constraints are timeouts '
                                     . 'on the server.', 'duplicator');
-                            ?>
+                                ?>
                         </i>
                     </p>
                 </div>
@@ -272,12 +285,7 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                 <!-- DUPARCHIVE -->
                 <div id="engine-details-2" style="display:none">
                     <p class="description">
-                        <?php
-                            $utmCodes = "utm_source=duplicator_free&amp;utm_medium=wordpress_plugin&amp;"
-                                      . "utm_content=free_settings_package_duparchive&amp;utm_campaign=duplicator_pro";
-                            $proURL   = "https://snapcreek.com/duplicator?{$utmCodes}";
-                            esc_html_e('Creates a custom archive format (archive.daf).', 'duplicator');
-                        ?>
+                        <?php esc_html_e('Creates a custom Backup format (archive.daf).', 'duplicator'); ?>
                         <br/>
                         <i>
                             <?php esc_html_e('This option is recommended for large sites or sites on constrained servers.', 'duplicator'); ?>
@@ -289,16 +297,17 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                                         '%1$s and %2$s represents the opening and closing HTML tags for an anchor or link',
                                         'duplicator'
                                     ),
-                                    "<a href='{$proURL}' target='_blank'>", '</a>'
+                                    '<a href="' . esc_url(Upsell::getCampaignUrl('package_settings_daf', 'Duplicator Pro')) . '" target="_blank">',
+                                    '</a>'
                                 );
-                            ?>
+                                ?>
                         </i>
                     </p>
                 </div>
             </td>
         </tr>
         <tr>
-            <th scope="row"><label><?php esc_html_e("Archive Flush", 'duplicator'); ?></label></th>
+            <th scope="row"><label><?php esc_html_e('Network Keep Alive', 'duplicator'); ?></label></th>
             <td>
                 <input type="checkbox" name="package_zip_flush" id="package_zip_flush" <?php echo ($package_zip_flush) ? 'checked="checked"' : ''; ?> />
                 <label for="package_zip_flush"><?php esc_html_e("Attempt Network Keep Alive", 'duplicator'); ?></label>
@@ -307,7 +316,7 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                     <?php
                     esc_html_e("This will attempt to keep a network connection established for large archives.", 'duplicator');
                     echo '&nbsp; ';
-                    esc_html_e(" Valid only when Archive Engine for ZipArchive is enabled.");
+                    esc_html_e(' Valid only when Backup Engine for ZipArchive is enabled.', 'duplicator');
                     ?>
                 </p>
             </td>
@@ -335,7 +344,14 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                     <input type="radio" name="installer_name_mode"
                         value="<?php echo DUP_Settings::INSTALLER_NAME_MODE_WITH_HASH; ?>"
                         <?php checked($installerNameMode === DUP_Settings::INSTALLER_NAME_MODE_WITH_HASH); ?> />
-                    <b class="dup-install-meta"><?php esc_html_e("Secure", 'duplicator'); ?></b> &nbsp; [name]_[hash]_[time]_installer.php &nbsp;
+                    <b class="dup-install-meta"><?php esc_html_e("Secure", "duplicator"); ?></b> &nbsp;
+                    <?php
+                    echo esc_html_x(
+                        '[name]_[hash]_[time]_installer.php',
+                        'Leave _installer.php part as is translate only [name], [hash] and [time]',
+                        'duplicator'
+                    );
+                    ?> &nbsp;
                     <i>(<?php esc_html_e("recommended", 'duplicator'); ?>)</i>
                 </label>
                 <p class="description">
@@ -352,7 +368,7 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                         esc_html_e(
                             'This setting specifies the name of the installer used at download-time.  Independent of the value of this setting, you can '
                             . 'change the name of the installer in the "Save as" file dialog at download-time.  If you choose to use a custom name, '
-                            . 'use a file name that is known only to you. Installer filenames must end in "php".  Changes to the archive file should not '
+                            . 'use a file name that is known only to you. Installer filenames must end in "php".  Changes to the Backup file should not '
                             . 'be made.',
                             'duplicator'
                         );
@@ -368,7 +384,7 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                         <i>
                             <i class="fas fa-info-circle fa-sm"></i>
                             <?php
-                            esc_html_e('Tip: Each row on the packages screen includes a copy button to copy the installer name to the clipboard.  '
+                            esc_html_e('Tip: Each row on the Backups screen includes a copy button to copy the installer name to the clipboard.  '
                                 . 'Paste the installer name from the clipboard into the URL being used to install the destination site.  '
                                 . 'This feature is handy when using the secure installer name.', 'duplicator');
                             ?>
@@ -409,7 +425,7 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
                     </optgroup>
                 </select>
                 <p class="description">
-                    <?php esc_html_e("The UTC date format shown in the 'Created' column on the Packages screen.", 'duplicator'); ?> <br/>
+                    <?php esc_html_e("The UTC date format shown in the 'Created' column on the Backups screen.", 'duplicator'); ?> <br/>
                     <i><?php esc_html_e("To use WordPress timezone formats consider an upgrade to Duplicator Pro.", 'duplicator'); ?></i>
                 </p>
             </td>
@@ -419,7 +435,7 @@ $installerNameMode      = DUP_Settings::Get('installer_name_mode');
 
     <p class="submit" style="margin: 20px 0px 0xp 5px;">
         <br/>
-        <input type="submit" name="submit" id="submit" class="button-primary" value="<?php esc_attr_e("Save Package Settings", 'duplicator') ?>" style="display: inline-block;" />
+        <input type="submit" name="submit" id="submit" class="button-primary" value="<?php esc_attr_e("Save Backup Settings", 'duplicator') ?>" style="display: inline-block;" />
     </p>
 </form>
 

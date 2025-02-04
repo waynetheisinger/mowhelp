@@ -3,12 +3,12 @@
 /**
  *
  * @package templates/default
- *
  */
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 
 use Duplicator\Installer\Core\Params\PrmMng;
+use Duplicator\Installer\Utils\InstallerLinkManager;
 
 $recoveryLink = PrmMng::getInstance()->getValue(PrmMng::PARAM_RECOVERY_LINK);
 ?>
@@ -24,8 +24,14 @@ $recoveryLink = PrmMng::getInstance()->getValue(PrmMng::PARAM_RECOVERY_LINK);
 </div>
 <p>
     <b>Additional Resources:</b><br/>
-    &raquo; <a target='_blank' href='https://snapcreek.com/duplicator/docs/'>Help Resources</a><br/>
-    &raquo; <a target='_blank' href='https://snapcreek.com/duplicator/docs/faqs-tech/'>Technical FAQ</a>
+    &raquo; 
+    <a target='_blank' href='<?php echo InstallerLinkManager::getDocUrl('', 'install', 'Help Resources'); ?>'>
+        Help Resources
+    </a><br/>
+    &raquo; 
+    <a target='_blank' href='<?php echo InstallerLinkManager::getCategoryUrl(InstallerLinkManager::TROUBLESHOOTING_CAT, 'install', 'Technical FAQ'); ?>'>
+        Technical FAQ
+    </a>
 </p>
 <p class="text-center">
     <input id="ajax-error-try-again" type="button" class="default-btn" value="&laquo; Try Again" />
@@ -36,6 +42,7 @@ $recoveryLink = PrmMng::getInstance()->getValue(PrmMng::PARAM_RECOVERY_LINK);
     <?php } ?>
 </p>
 <p class="text-center">
-    <i style='font-size:11px'>See online help for more details at <a href='https://snapcreek.com/ticket' target='_blank'>snapcreek.com</a></i>
+    <?php $url = DUPX_Constants::DUP_SITE_URL . 'contact/'; ?>
+    <i style='font-size:11px'>See online help for more details at <a href='<?php echo DUPX_U::esc_attr($url); ?>' target='_blank'>duplicator.com</a></i>
 </p>
 </div>

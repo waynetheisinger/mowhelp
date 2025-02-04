@@ -1,0 +1,22 @@
+#sidebar{
+    .widget{
+        a{
+            color: var(--text-color-darken);
+        }
+        uL{
+            li{
+                &.cat-item{
+                    color: var(--color-primary);
+                }
+            }
+        }
+    }
+}
+
+.category{
+    .columns{
+         @media screen and (max-width: 1024px){
+            padding: 0 15px;
+        }
+    }
+}

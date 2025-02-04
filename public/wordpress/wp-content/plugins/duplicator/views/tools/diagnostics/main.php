@@ -22,8 +22,8 @@ defined('ABSPATH') || defined('DUPXABSPATH') || exit;
     td.dup-settings-diag-header {background-color:#D8D8D8; font-weight: bold; border-style: none; color:black}
     .widefat th {font-weight:bold; }
     .widefat td {padding:2px 2px 2px 8px}
-    .widefat td:nth-child(1) {width:10px;}
-    .widefat td:nth-child(2) {padding-left: 20px; width:100% !important}
+    .widefat td:nth-child(1) {width:120px;}
+    .widefat td:nth-child(2) {padding-left: 20px;}
     textarea.dup-opts-read {width:100%; height:40px; font-size:12px}
     div.lite-sub-tabs {padding: 10px 0 10px 0; font-size: 14px}
 </style>
@@ -48,17 +48,32 @@ $tools_url = 'admin.php?page=duplicator-tools&tab=diagnostics';
 
 switch ($section) {
     case 'info':
-        echo "<div class='lite-sub-tabs'><b>" . esc_html($txt_diagnostic) . "</b> &nbsp;|&nbsp; <a href='" . esc_url($tools_url . "&section=log") . "'>" . esc_html($txt_log) . "</a> &nbsp;|&nbsp; <a href='" . esc_url($tools_url . "&section=support") . "'>" . esc_html($txt_support) . "</a></div>";
+        echo "<div class='lite-sub-tabs'><b>" .
+            esc_html($txt_diagnostic) .
+            "</b> &nbsp;|&nbsp; <a href='" . esc_url($tools_url . "&section=log") . "'>" .
+            esc_html($txt_log) . "</a> &nbsp;|&nbsp; <a href='" .
+            esc_url($tools_url . "&section=support") . "'>" .
+            esc_html($txt_support) . "</a></div>";
         include(dirname(__FILE__) . '/information.php');
         break;
 
     case 'log':
-        echo "<div class='lite-sub-tabs'><a href='" . esc_url($tools_url . "&section=info") . "'>" . esc_html($txt_diagnostic) . "</a>  &nbsp;|&nbsp;<b>" . esc_html($txt_log) . "</b>  &nbsp;|&nbsp; <a href='" . esc_url($tools_url . "&section=support") . "'>" . esc_html($txt_support) . "</a></div>";
+        echo "<div class='lite-sub-tabs'><a href='" .
+            esc_url($tools_url . "&section=info") . "'>" .
+            esc_html($txt_diagnostic) . "</a>  &nbsp;|&nbsp;<b>" .
+            esc_html($txt_log) . "</b>  &nbsp;|&nbsp; <a href='" .
+            esc_url($tools_url . "&section=support") . "'>" .
+            esc_html($txt_support) . "</a></div>";
         include(dirname(__FILE__) . '/logging.php');
         break;
 
     case 'support':
-        echo "<div class='lite-sub-tabs'><a href='" . esc_url($tools_url . "&section=info") . "'>" . esc_html($txt_diagnostic) . "</a> &nbsp;|&nbsp; <a href='" . esc_url($tools_url . "&section=log") . "'>" . esc_html($txt_log) . "</a> &nbsp;|&nbsp; <b>" . esc_html($txt_support) . "</b> </div>";
+        echo "<div class='lite-sub-tabs'><a href='" .
+            esc_url($tools_url . "&section=info") . "'>" .
+            esc_html($txt_diagnostic) . "</a> &nbsp;|&nbsp; <a href='" .
+            esc_url($tools_url . "&section=log") . "'>" .
+            esc_html($txt_log) . "</a> &nbsp;|&nbsp; <b>" .
+            esc_html($txt_support) . "</b> </div>";
         include(dirname(__FILE__) . '/support.php');
         break;
 }

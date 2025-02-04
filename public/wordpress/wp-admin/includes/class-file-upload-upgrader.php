@@ -68,11 +68,35 @@ class File_Upload_Upgrader {
 				wp_die( $file['error'] );
 			}
 
+			if ( 'pluginzip' === $form || 'themezip' === $form ) {
+				$archive_is_valid = false;
+
+				/** This filter is documented in wp-admin/includes/file.php */
+				if ( class_exists( 'ZipArchive', false ) && apply_filters( 'unzip_file_use_ziparchive', true ) ) {
+					$archive          = new ZipArchive();
+					$archive_is_valid = $archive->open( $file['file'], ZIPARCHIVE::CHECKCONS );
+
+					if ( true === $archive_is_valid ) {
+						$archive->close();
+					}
+				} else {
+					require_once ABSPATH . 'wp-admin/includes/class-pclzip.php';
+
+					$archive          = new PclZip( $file['file'] );
+					$archive_is_valid = is_array( $archive->properties() );
+				}
+
+				if ( true !== $archive_is_valid ) {
+					wp_delete_file( $file['file'] );
+					wp_die( __( 'Incompatible Archive.' ) );
+				}
+			}
+
 			$this->filename = $_FILES[ $form ]['name'];
 			$this->package  = $file['file'];
 
-			// Construct the object array.
-			$object = array(
+			// Construct the attachment array.
+			$attachment = array(
 				'post_title'     => $this->filename,
 				'post_content'   => $file['url'],
 				'post_mime_type' => $file['type'],
@@ -82,7 +106,7 @@ class File_Upload_Upgrader {
 			);
 
 			// Save the data.
-			$this->id = wp_insert_attachment( $object, $file['file'] );
+			$this->id = wp_insert_attachment( $attachment, $file['file'] );
 
 			// Schedule a cleanup for 2 hours from now in case of failed installation.
 			wp_schedule_single_event( time() + 2 * HOUR_IN_SECONDS, 'upgrader_scheduled_cleanup', array( $this->id ) );

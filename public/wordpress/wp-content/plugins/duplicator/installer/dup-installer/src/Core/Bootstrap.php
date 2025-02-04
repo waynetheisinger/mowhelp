@@ -3,9 +3,8 @@
 /**
  * Interface that collects the functions of initial duplicator Bootstrap
  *
- * @package Duplicator
+ * @package   Duplicator
  * @copyright (c) 2021, Snapcreek LLC
- *
  */
 
 namespace Duplicator\Installer\Core;
@@ -21,7 +20,7 @@ class Bootstrap
 {
     const ARCHIVE_PREFIX      = 'dup-archive__';
     const ARCHIVE_EXTENSION   = '.txt';
-    const MINIMUM_PHP_VERSION = '5.3.8';
+    const MINIMUM_PHP_VERSION = '5.6.20';
 
     /**
      * this variable becomes false after the installer is initialized by skipping the shutdown function defined in the boot class
@@ -57,7 +56,7 @@ class Bootstrap
         }
         if (self::initPhpErrorLog(false) === false) {
             // Enable this only for debugging. Generate a log too alarmist.
-            error_log('DUPLICATOR CAN\'T CHANGE THE PATH OF PHP ERROR LOG FILE', E_USER_NOTICE);
+            SnapUtil::errorLog('DUPLICATOR CAN\'T CHANGE THE PATH OF PHP ERROR LOG FILE', E_USER_NOTICE);
         }
 
         /*
@@ -118,7 +117,7 @@ class Bootstrap
      */
     public static function phpIni()
     {
-        /** Absolute path to the Installer directory. - necessary for php protection */
+        /* Absolute path to the Installer directory. - necessary for php protection */
         if (!defined('KB_IN_BYTES')) {
             define('KB_IN_BYTES', 1024);
         }
@@ -204,7 +203,6 @@ class Bootstrap
         require_once(DUPX_INIT . '/classes/config/class.constants.php');
         require_once(DUPX_INIT . '/classes/config/class.conf.utils.php');
         require_once(DUPX_INIT . '/classes/class.installer.state.php');
-        require_once(DUPX_INIT . '/classes/tests/class.test.wordpress.exec.php');
         require_once(DUPX_INIT . '/ctrls/classes/class.ctrl.ajax.php');
         require_once(DUPX_INIT . '/ctrls/classes/class.ctrl.params.php');
         require_once(DUPX_INIT . '/ctrls/ctrl.base.php');
@@ -254,7 +252,7 @@ class Bootstrap
         }
 
         if (!file_exists($logFile)) {
-            error_log("PHP ERROR LOG INIT");
+            SnapUtil::errorLog("PHP ERROR LOG INIT");
         }
 
         return true;

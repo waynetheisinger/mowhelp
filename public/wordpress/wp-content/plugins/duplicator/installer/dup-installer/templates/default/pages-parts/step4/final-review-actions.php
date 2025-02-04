@@ -3,12 +3,12 @@
 /**
  *
  * @package templates/default
- *
  */
 
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 
 use Duplicator\Installer\Core\Params\PrmMng;
+use Duplicator\Installer\Utils\InstallerLinkManager;
 use Duplicator\Libs\Snap\SnapURL;
 
 $paramsManager = PrmMng::getInstance();
@@ -35,6 +35,6 @@ $archiveConfig = DUPX_ArchiveConfig::getInstance();
         Review the <?php echo $wpconfigNotice->longMsg; ?> and <?php echo $htaccessNorice->longMsg; ?>
     </li>
     <li>
-        For additional help visit the <a href='http://snapcreek.com/support/docs/faqs/' target='_blank'>online FAQs</a>
+        For additional help visit the <a href="<?php echo InstallerLinkManager::getDocUrl('', 'install', 'final review'); ?>" target='_blank'>online FAQs</a>
     </li>
 </ul>

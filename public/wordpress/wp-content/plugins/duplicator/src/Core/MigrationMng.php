@@ -2,7 +2,6 @@
 
 /**
  * Utility class managing th emigration data
- *
  */
 
 namespace Duplicator\Core;
@@ -10,11 +9,13 @@ namespace Duplicator\Core;
 use DUP_Archive;
 use DUP_CTRL_Tools;
 use DUP_Settings;
-use DUP_UI_Notice;
-use Duplicator\Core\Controllers\ControllersManager;
+use DUP_Util;
 use Duplicator\Libs\Snap\SnapWP;
 use Duplicator\Libs\Snap\SnapIO;
 use Duplicator\Utils\CachesPurge\CachesPurge;
+use Duplicator\Utils\UsageStatistics\CommStats;
+use Duplicator\Utils\UsageStatistics\PluginData;
+use Duplicator\Views\AdminNotices;
 use Error;
 use Exception;
 
@@ -37,13 +38,22 @@ class MigrationMng
         'instFile' => array()
     );
 
+    /**
+     * Init
+     *
+     * @return void
+     */
     public static function init()
     {
         add_action('admin_init', array(__CLASS__, 'adminInit'));
+        add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, function ($migrationData) {
+            DUP_Util::initSnapshotDirectory();
+        });
         add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, array(__CLASS__, 'removeFirstLoginOption'));
         add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, array(__CLASS__, 'renameInstallersPhpFiles'));
         add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, array(__CLASS__, 'storeMigrationFiles'));
         add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, array(__CLASS__, 'setDupSettingsAfterInstall'));
+        add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, array(__CLASS__, 'usageStatistics'));
         // save cleanup report after actions
         add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, array(__CLASS__, 'saveCleanupReport'), 100);
 
@@ -51,30 +61,29 @@ class MigrationMng
         add_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, array(__CLASS__, 'autoCleanFileAfterInstall'), 99999);
     }
 
+    /**
+     * Admin Init function
+     *
+     * @return void
+     */
     public static function adminInit()
     {
         if (self::isFirstLoginAfterInstall()) {
             add_action('current_screen', array(__CLASS__, 'wpAdminHook'), 99999);
-            update_option(DUP_UI_Notice::OPTION_KEY_MIGRATION_SUCCESS_NOTICE, true);
+            update_option(AdminNotices::OPTION_KEY_MIGRATION_SUCCESS_NOTICE, true);
             do_action(self::HOOK_FIRST_LOGIN_AFTER_INSTALL, self::getMigrationData());
         }
     }
 
     /**
+     * Admin Hook function
      *
+     * @return void
      */
     public static function wpAdminHook()
     {
         if (!DUP_CTRL_Tools::isToolPage()) {
-            wp_redirect(
-                ControllersManager::getMenuLink(
-                    'duplicator-tools',
-                    'diagnostics',
-                    null,
-                    array(),
-                    false
-                )
-            );
+            wp_redirect(DUP_CTRL_Tools::getDiagnosticURL(false));
             exit;
         }
     }
@@ -118,8 +127,23 @@ class MigrationMng
     }
 
     /**
+     * Clean after install
      *
-     * @param array $migrationData
+     * @param array $migrationData migration data
+     *
+     * @return void
+     */
+    public static function usageStatistics($migrationData)
+    {
+        $migrationData = (object) $migrationData;
+        PluginData::getInstance()->updateFromMigrateData($migrationData);
+        CommStats::installerSend();
+    }
+
+    /**
+     *
+     * @param array $migrationData Migration data
+     *
      * @return void
      */
     public static function autoCleanFileAfterInstall($migrationData)
@@ -134,7 +158,8 @@ class MigrationMng
 
     /**
      *
-     * @param array $migrationData
+     * @param array $migrationData Migration data
+     *
      * @return void
      */
     public static function setDupSettingsAfterInstall($migrationData)
@@ -169,7 +194,8 @@ class MigrationMng
 
     /**
      *
-     * @param array $migrationData
+     * @param array $migrationData Migration data
+     *
      * @return void
      */
     public static function removeFirstLoginOption($migrationData)
@@ -181,7 +207,8 @@ class MigrationMng
      *
      * @staticvar array $migrationData
      *
-     * @param string|null $key
+     * @param string|null $key Key to get from migration data
+     *
      * @return mixed
      */
     public static function getMigrationData($key = null)
@@ -190,7 +217,7 @@ class MigrationMng
         if (is_null($migrationData)) {
             $migrationData = get_option(self::MIGRATION_DATA_OPTION, false);
             if (is_string($migrationData)) {
-                $migrationData = (array) json_decode($migrationData);
+                $migrationData = json_decode($migrationData, true);
             }
         }
 
@@ -314,7 +341,10 @@ class MigrationMng
                 } else {
                     self::$migrationCleanupReport['instFile'][] = "<div class='success'>"
                         . '<i class="fa fa-exclamation-triangle red"></i> '
-                        . sprintf(__('Can\'t rename installer file <b>%s</b> with HASH, please remove it for security reasons', 'duplicator'), esc_html($fileName))
+                        . sprintf(
+                            __('Can\'t rename installer file <b>%s</b> with HASH, please remove it for security reasons', 'duplicator'),
+                            esc_html($fileName)
+                        )
                         . '</div>';
                 }
             }
@@ -323,13 +353,16 @@ class MigrationMng
 
     /**
      *
-     * @param array $migrationData
+     * @param array $migrationData Migration data
+     *
+     * @return void
      */
     public static function storeMigrationFiles($migrationData)
     {
         $ssdInstallerPath = DUP_Settings::getSsdirInstallerPath();
         wp_mkdir_p($ssdInstallerPath);
         SnapIO::emptyDir($ssdInstallerPath);
+        SnapIO::createSilenceIndex($ssdInstallerPath);
 
         $filesToMove = array(
             $migrationData['installerLog'],
@@ -347,7 +380,7 @@ class MigrationMng
                 } else {
                     self::$migrationCleanupReport['stored'] = "<div class='success'>"
                         . '<i class="fa fa-exclamation-triangle"></i> '
-                        . sprintf(__('Can\'t move %s to %s', 'duplicagtor'), esc_html($path), $ssdInstallerPath)
+                        . sprintf(__('Can\'t move %s to %s', 'duplicator'), esc_html($path), $ssdInstallerPath)
                         . '</div>';
                 }
             }
@@ -466,14 +499,14 @@ class MigrationMng
             )));
         }
 
-        $result = array_map(array('\\Duplicator\\Libs\\Snap\\SnapIO', 'safePathUntrailingslashit'), $result);
+        $result = array_map(array('Duplicator\\Libs\\Snap\\SnapIO', 'safePathUntrailingslashit'), $result);
         return array_unique($result);
     }
 
     /**
      * @param $path string Path to check
+     *
      * @return bool true if the file at current path is the installer file
-     * @throws Exception
      */
     public static function isInstallerFile($path)
     {
@@ -484,6 +517,11 @@ class MigrationMng
         return strpos(implode("", $last5Lines), "DUPLICATOR_INSTALLER_EOF") !== false;
     }
 
+    /**
+     * Clear all the installer files and directory
+     *
+     * @return array
+     */
     public static function cleanMigrationFiles()
     {
         $cleanList = self::checkInstallerFilesList();

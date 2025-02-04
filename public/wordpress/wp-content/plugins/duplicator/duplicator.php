@@ -2,14 +2,14 @@
 
 /**
  * Plugin Name: Duplicator
- * Plugin URI: https://snapcreek.com/duplicator/duplicator-free/
+ * Plugin URI: https://duplicator.com/
  * Description: Migrate and backup a copy of your WordPress files and database. Duplicate and move a site from one location to another quickly.
- * Version: 1.5.0
- * Requires at least: 4.0
- * Tested up to: 6.0
- * Requires PHP: 5.3.8
- * Author: Snap Creek
- * Author URI: http://www.snapcreek.com/duplicator/
+ * Version: 1.5.11.2
+ * Requires at least: 4.9
+ * Tested up to: 6.6
+ * Requires PHP: 5.6.20
+ * Author: Duplicator
+ * Author URI: https://duplicator.com/
  * Network: true
  * Text Domain: duplicator
  * License: GPLv2 or later
@@ -33,13 +33,12 @@
 defined('ABSPATH') || exit;
 
 // CHECK PHP VERSION
-define('DUPLICATOR_LITE_PHP_MINIMUM_VERSION', '5.3.8');
-define('DUPLICATOR_LITE_PHP_SUGGESTED_VERSION', '5.6.20');
-require_once(dirname(__FILE__) . "/tools/DuplicatorPhpVersionCheck.php");
+define('DUPLICATOR_LITE_PHP_MINIMUM_VERSION', '5.6.20');
+define('DUPLICATOR_LITE_PHP_SUGGESTED_VERSION', '7.4');
+require_once dirname(__FILE__) . "/src/Utils/DuplicatorPhpVersionCheck.php";
 if (DuplicatorPhpVersionCheck::check(DUPLICATOR_LITE_PHP_MINIMUM_VERSION, DUPLICATOR_LITE_PHP_SUGGESTED_VERSION) === false) {
     return;
 }
-
 $currentPluginBootFile = __FILE__;
 
 require_once dirname(__FILE__) . '/duplicator-main.php';

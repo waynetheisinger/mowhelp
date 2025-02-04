@@ -6,11 +6,12 @@ use Duplicator\Libs\Snap\SnapIO;
  * Recursivly scans a directory and finds all sym-links and unreadable files
  *
  * Standard: PSR-2
+ *
  * @link http://www.php-fig.org/psr/psr-2
  *
- * @package Duplicator
+ * @package    Duplicator
  * @subpackage classes/utilities
- * @copyright (c) 2017, Snapcreek LLC
+ * @copyright  (c) 2017, Snapcreek LLC
  *
  * @todo Refactor out IO methods into class.io.php file
  */
@@ -100,6 +101,7 @@ class DUP_Util
 
     /**
      * return absolute path for the files that are core directories
+     *
      * @return string array
      */
     public static function getWPCoreFiles()
@@ -272,7 +274,7 @@ class DUP_Util
      *
      * @see elapsedTime
      *
-     * @return  string   A float in the form "msec sec", where sec is the number of seconds since the Unix epoch
+     * @return string   A float in the form "msec sec", where sec is the number of seconds since the Unix epoch
      */
     public static function getMicrotime()
     {
@@ -300,11 +302,18 @@ class DUP_Util
      * @param mixed number $end     The final time in the sequence to measure
      * @param mixed number $start   The start time in the sequence to measure
      *
-     * @return  string   The time elapsed from $start to $end
+     * @return string   The time elapsed from $start to $end
      */
     public static function elapsedTime($end, $start)
     {
-        return sprintf("%.2f sec.", abs($end - $start));
+        return sprintf(
+            esc_html_x(
+                "%.2f sec.",
+                "sec. stands for seconds",
+                "duplicator"
+            ),
+            abs($end - $start)
+        );
     }
 
     /**
@@ -386,7 +395,6 @@ class DUP_Util
      * @param string $path The full path to a system directory
      *
      * @return int Returns the size of the directory in bytes
-     *
      */
     public static function getDirectorySize($path)
     {
@@ -411,7 +419,6 @@ class DUP_Util
      * Can shell_exec be called on this server
      *
      * @return bool Returns true if shell_exec can be called on server
-     *
      */
     public static function hasShellExec()
     {
@@ -447,7 +454,6 @@ class DUP_Util
      * Is the server running Windows operating system
      *
      * @return bool Returns true if operating system is Windows
-     *
      */
     public static function isWindows()
     {
@@ -595,14 +601,17 @@ class DUP_Util
 
         SnapIO::chmod($path_ssdir, 'u+rwx,go+rx');
         SnapIO::dirWriteCheckOrMkdir(DUP_Settings::getSsdirTmpPath(), 'u+rwx');
+        SnapIO::createSilenceIndex(DUP_Settings::getSsdirTmpPath());
 
         //--------------------------------
         //FILE CREATION & HARDEN PROCESS
         //index.php, .htaccess, robots.txt
-        self::setupBackupDirIndexFile();
+        SnapIO::createSilenceIndex(DUP_Settings::getSsdirPath());
         self::setupBackupDirRobotsFile();
         self::setupBackupDirHtaccess();
         self::performHardenProcesses();
+        // For old installations
+        SnapIO::createSilenceIndex(DUP_Settings::getSsdirInstallerPath());
 
         return true;
     }
@@ -622,8 +631,18 @@ class DUP_Util
                 @unlink($fileName);
             } elseif (!file_exists($fileName)) {
                 $fileContent = <<<HTACCESS
+# Duplicator config, In case of file downloading problem, you can disable/enable it at Duplicator > Settings > Storage > Apache .htaccess
+
 Options -Indexes
-<Files *.php>\n deny from all\n</Files>
+<Files *.php>
+    deny from all
+</Files>
+<IfModule mod_headers.c>
+    <FilesMatch "\.(daf)$">
+        ForceType application/octet-stream
+        Header set Content-Disposition attachment
+    </FilesMatch>
+</IfModule>
 HTACCESS;
                 if (file_put_contents($fileName, $fileContent) === false) {
                     throw new Exception('Can\'t create .haccess');
@@ -631,29 +650,6 @@ HTACCESS;
             }
         } catch (Exception $ex) {
             DUP_Log::Trace("Unable create file htaccess {$fileName} msg:" . $ex->getMessage());
-        }
-    }
-
-    /**
-     * Attempts to create an index.php file in the backups directory
-     *
-     * @return void
-     */
-    protected static function setupBackupDirIndexFile()
-    {
-        try {
-            $fileName = DUP_Settings::getSsdirPath() . '/index.php';
-            if (!file_exists($fileName)) {
-                $fileContent = <<<HTACCESS
-<?php
-// silence;
-HTACCESS;
-                if (file_put_contents($fileName, $fileContent) === false) {
-                    throw new Exception('Can\'t create .haccess');
-                }
-            }
-        } catch (Exception $ex) {
-            DUP_Log::Trace("Unable create index.php {$fileName} msg:" . $ex->getMessage());
         }
     }
 
@@ -692,8 +688,8 @@ HTACCESS;
         $backupsDir = DUP_Settings::getSsdirPath();
 
         //Edge Case: Remove any main.installer.php files
-        $dupInstallFile  = "{$backupsDir}/dup-installer/main.installer.php";
-        if (file_exists($dupInstallFile) ) {
+        $dupInstallFile = "{$backupsDir}/dup-installer/main.installer.php";
+        if (file_exists($dupInstallFile)) {
             SnapIO::chmod($dupInstallFile, "a+w");
             SnapIO::unlink("{$dupInstallFile}");
         }
@@ -748,7 +744,7 @@ HTACCESS;
     /**
      * Is the server PHP 5.3 or better
      *
-     * @return  bool    Returns true if the server PHP 5.3 or better
+     * @return bool    Returns true if the server PHP 5.3 or better
      */
     public static function PHP53()
     {
@@ -842,7 +838,8 @@ HTACCESS;
      * Check given table is exist in real
      *
      * @param $table string Table name
-     * @return booleam
+     *
+     * @return bool
      */
     public static function isTableExists($table)
     {
@@ -859,8 +856,8 @@ HTACCESS;
     /**
      * Finds if its a valid executable or not
      *
-     * @param type $exe A non zero length executable path to find if that is executable or not.
-     * @param type $expectedValue expected value for the result
+     * @param string $cmd $exe A non zero length executable path to find if that is executable or not.
+     *
      * @return boolean
      */
     public static function isExecutable($cmd)
@@ -936,6 +933,7 @@ HTACCESS;
      * Check if function exists and isn't in ini disable_functions
      *
      * @param string $function_name
+     *
      * @return bool
      */
     public static function isIniFunctionEnalbe($function_name)

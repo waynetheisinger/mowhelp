@@ -1,0 +1,41 @@
+.home-social {
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--color-primary-light);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+           h2 {
+                color: #222;
+                font-family: FuturaMedium;
+                margin-bottom: 15px;
+                text-transform: none;
+                font-size: 18px;
+                text-align: left;
+            }
+            .row {
+                display: flex;
+                [class*=home-footer-] {
+                    margin-right: 15px
+                }
+                a {
+                    color: #484848;
+                    text-align: center;
+                    font-size: 12px;
+                    display: block;
+                    &:hover {
+                        color: #f60;
+                        text-decoration: none;
+                    }
+                    img {
+                        display: block;
+                        margin: 0 auto;
+                        height: 30px;
+                        width: auto;
+                    }
+                    span {
+                        display: block;
+                    }
+                }
+            }
+        }

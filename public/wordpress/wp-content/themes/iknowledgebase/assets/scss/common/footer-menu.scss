@@ -1,0 +1,21 @@
+.footer-menu{
+    display: flex;
+    flex-wrap: wrap;
+    a{
+        display: block;
+        text-align: left;
+        width: 49%;
+        font-size: 12px;
+        color: var(--footer-menu-color);
+        &:hover{
+            color: var(--footer-menu-hover-color);
+        }
+    }
+}
+
+.footer-menu-title{
+    font-size: 20px;
+    font-family: var(--family-title);
+    text-align: left;
+    color: var(--color-primary);
+}

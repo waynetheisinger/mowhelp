@@ -1,4 +1,8 @@
 <?php
+
+use Duplicator\Controllers\StorageController;
+use Duplicator\Libs\Snap\SnapUtil;
+
 defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 ?>
 <style>
@@ -13,9 +17,10 @@ defined('ABSPATH') || defined('DUPXABSPATH') || exit;
     $action_response = esc_html__("Storage Settings Saved", 'duplicator');
 
     //SAVE RESULTS
-    if (filter_input(INPUT_POST, 'action', FILTER_UNSAFE_RAW) === 'save') {
+    if ($_POST['action'] === 'save') {
         //Nonce Check
-        if (!wp_verify_nonce(filter_input(INPUT_POST, 'dup_storage_settings_save_nonce_field', FILTER_UNSAFE_RAW), 'dup_settings_save')) {
+        $nonce = SnapUtil::sanitizeTextInput(INPUT_POST, 'dup_storage_settings_save_nonce_field');
+        if (!wp_verify_nonce($nonce, 'dup_settings_save')) {
             die('Invalid token permissions to perform this request.');
         }
 
@@ -36,7 +41,7 @@ defined('ABSPATH') || defined('DUPXABSPATH') || exit;
             ?>
             <div id="message" class="notice notice-error is-dismissible">
                 <p>
-                    <b><?php esc_html_e('Storage folder move problem'); ?></b>
+                    <b><?php esc_html_e('Storage folder move problem', 'duplicator'); ?></b>
                 </p>
                 <p>
                     <?php echo sprintf(__('Duplicator can\'t change the storage folder to <i>%s</i>', 'duplicator'), esc_html($targetFolder)); ?><br>
@@ -87,7 +92,7 @@ defined('ABSPATH') || defined('DUPXABSPATH') || exit;
                     </p>
                     <p class="description">
                         <?php
-                        esc_html_e("The storage location is where all package files are stored to disk. If your host has troubles writing content to the 'Legacy Path' then use "
+                        esc_html_e("The storage location is where all Backup files are stored to disk. If your host has troubles writing content to the 'Legacy Path' then use "
                             . "the 'Contents Path'.  Upon clicking the save button all files are moved to the new location and the previous path is removed.", 'duplicator');
                         ?><br/>
 
@@ -120,51 +125,7 @@ defined('ABSPATH') || defined('DUPXABSPATH') || exit;
 <!-- ==========================================
 THICK-BOX DIALOGS: -->
 <?php
-
-function dup_lite_storage_advanced_pro_content()
-{
-    ob_start();
-    ?>
-    <div style="text-align: center">
-        <img src="<?php echo esc_url(DUPLICATOR_PLUGIN_URL . "assets/img/logo-dpro-300x50.png"); ?>" style="height:50px; width:250px" /><br/>
-        <?php
-                esc_html_e('Store to Multiple Endpoints', 'duplicator');
-                echo '<br/>';
-                esc_html_e('with Duplicator Pro', 'duplicator');
-        ?>
-  
-        <div style="text-align: left; margin:auto; width:200px">
-            <ul>
-                <li><i class="fab fa-amazon"></i>&nbsp;<?php esc_html_e('Amazon S3', 'duplicator'); ?></li>
-                <li><i class="fab fa-dropbox"></i>&nbsp;<?php esc_html_e(' Dropbox', 'duplicator'); ?></li>
-                <li><i class="fab fa-google-drive"></i>&nbsp;<?php esc_html_e('Google Drive', 'duplicator'); ?></li>
-                <li><i class="fa fa-cloud fa-sm"></i>&nbsp;<?php esc_html_e('One Drive', 'duplicator'); ?></li>
-                <li><i class="fas fa-network-wired"></i>&nbsp;<?php esc_html_e('FTP &amp; SFTP', 'duplicator'); ?></li>
-                <li><i class="fas fa-hdd"></i>&nbsp;<?php esc_html_e('Custom Directory', 'duplicator'); ?></li>
-            </ul>
-        </div>
-        <i>
-        <?php esc_html_e('Set up one-time storage locations and automatically', 'duplicator'); ?><br>
-        <?php esc_html_e('push the package to your destination.', 'duplicator'); ?>
-        </i>
-    </div>
-    <p style="text-align: center">
-        <a href="https://snapcreek.com/duplicator/?utm_source=duplicator_free&utm_medium=wordpress_plugin&utm_content=free_settings_storage_popup_green&utm_campaign=duplicator_pro"
-           target="_blank"
-           class="dup-btn-call-action" style="font-size:15px; padding:8px 10px; width: 120px">
-            <?php esc_html_e('Learn More', 'duplicator'); ?>
-        </a>
-    </p>
-    <?php
-    return ob_get_clean();
-}
-$storageAlert          = new DUP_UI_Dialog();
-$storageAlert->title   = __('Advanced Storage', 'duplicator');
-$storageAlert->height  = 500;
-$storageAlert->width   = 400;
-$storageAlert->okText  = '';
-$storageAlert->message = dup_lite_storage_advanced_pro_content();
-$storageAlert->initAlert();
+$storageAlert = StorageController::getDialogBox('settings-storage-tab');
 ?>
 <script>
     jQuery(document).ready(function ($) {

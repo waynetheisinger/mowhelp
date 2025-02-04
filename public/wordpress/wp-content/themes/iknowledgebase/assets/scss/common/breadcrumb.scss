@@ -1,0 +1,20 @@
+.breadcrumb{
+     @media screen and (max-width: 1024px){
+        padding: 0 15px;
+    }
+    ul{
+        li{
+            color: var(--text-color-darken);
+            font-size: 14px;
+            a{
+                color: var(--text-color-darken);
+            }
+            &.is-active{
+                color: var(--color-primary);
+                a{
+                    color: var(--color-primary);
+                }
+            }
+        }
+    }
+}
