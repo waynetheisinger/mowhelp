@@ -2,11 +2,24 @@
 /**
  * The base configuration for WordPress by TasteWP.com
  */
- 
-define('DB_NAME',     "help-and-advice");
-define('DB_USER',     "magento-two");
-define('DB_PASSWORD', "xR8fE2iJ9eVRmr3KCkRByRUh");
-define('DB_HOST',     "164.92.183.25:3306");
+
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define( 'DB_NAME', getenv('WP_DB_NAME'));
+
+/** MySQL database username */
+define( 'DB_USER', getenv('WP_DB_USER'));
+
+/** MySQL database password */
+define( 'DB_PASSWORD', getenv('WP_DB_PASSWORD'));
+
+/** MySQL hostname */
+define( 'DB_HOST', getenv('WP_DB_HOST'));
+
+define('WP_HOME', 'http://mowhelp.test/help-and-advice/');
+define('WP_SITEURL', 'http://mowhelp.test/help-and-advice/');
+
+
 define('DB_CHARSET',  'utf8mb4');
 define('DB_COLLATE',  '');
 

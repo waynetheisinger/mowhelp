@@ -30,25 +30,26 @@ services:
       WP_DB_NAME: wordpress
       SPACES_ACCESS_KEY_ID: $SPACES_ACCESS_KEY_ID
       SPACES_SECRET_ACCESS_KEY: $SPACES_SECRET_ACCESS_KEY
-      DOMAIN_CURRENT_SITE: mowtalk.dev.itjl.xyz;
+      DOMAIN_CURRENT_SITE: mowhelp.test;
     volumes:
-      - ./public/wordpress:/var/www/html/blog
+      - ./public/wordpress:/var/www/html/help-and-advice
     networks:
       - mow-help-network
 
-  webserver:
+  mow-help-webserver:
     depends_on:
       - wordpress
     image: nginx:1.15.12-alpine
     container_name: mow-help-webserver
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "81:80"
     volumes:
-      - ./public/wordpress:/var/www/html/blog
+      - ./public/wordpress:/var/www/html/help-and-advice
       - ./conf/nginx/dev:/etc/nginx/conf.d
     networks:
       - mow-help-network
+      - mowring_mow-ring-network
 
 volumes:
   dbdata:
@@ -56,3 +57,5 @@ volumes:
 networks:
   mow-help-network:
     driver: bridge
+  mowring_mow-ring-network:
+    external: true
